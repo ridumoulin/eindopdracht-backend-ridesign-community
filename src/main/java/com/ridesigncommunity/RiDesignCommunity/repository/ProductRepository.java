@@ -1,4 +1,7 @@
 package com.ridesigncommunity.RiDesignCommunity.repository;
 
-public interface ProductRepository {
+import com.ridesigncommunity.RiDesignCommunity.model.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository<Product, Long> {
 }
