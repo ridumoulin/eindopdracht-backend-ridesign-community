@@ -1,4 +1,4 @@
 package com.ridesigncommunity.RiDesignCommunity.model;
 
-public class Favorites {
+public class Authority {
 }
