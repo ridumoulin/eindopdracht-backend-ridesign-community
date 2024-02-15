@@ -1,7 +1,10 @@
 package com.ridesigncommunity.RiDesignCommunity.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -9,6 +12,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "first_name")
     private String firstname;
@@ -19,39 +28,31 @@ public class User {
     @Column(name = "user_name")
     private String username;
 
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "password")
-    private String password;
-
     @Column(name = "is_ri_designer")
     private boolean isRiDesigner;
 
-    @OneToMany(mappedBy = "user")
-    private List<Product> favorites;
+    @ElementCollection
+    @CollectionTable(name = "favorites", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "product_id")
+    private List<Product> favorites = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "authority_id")
-    private Authority authority;
+    @OneToMany(
+            mappedBy = "user",
+            targetEntity = Authority.class,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
+    private Set<Authority> authorities = new HashSet<>();
 
+    public Long getUserId() { return userId; }
 
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+    public void setUserId(Long userId) { this.userId = userId;}
 
     public String getFirstname() {
         return firstname;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
+    public void setFirstname(String firstname) { this.firstname = firstname; }
 
     public String getLastname() {
         return lastname;
@@ -93,20 +94,11 @@ public class User {
         this.isRiDesigner = isRiDesigner;
     }
 
-    public List<Product> getFavorites() {
-        return favorites;
-    }
+    public List<Product> getFavorites() { return favorites; }
 
-    public void setFavorites(List<Product> favorites) {
-        this.favorites = favorites;
-    }
+    public void setFavorites(List<Product> favorites) { this.favorites = favorites; }
 
-    public Authority getAuthority() {
-        return authority;
-    }
+    public Set<Authority> getAuthorities() { return authorities; }
 
-    public void setAuthority(Authority authority) {
-        this.authority = authority;
-    }
-
+    public void setAuthorities(Set<Authority> authorities) { this.authorities = authorities; }
 }
