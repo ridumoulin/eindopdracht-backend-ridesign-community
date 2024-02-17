@@ -5,6 +5,8 @@ import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 public class ShoppingCartDto {
 
     public Long cartId;
@@ -14,7 +16,7 @@ public class ShoppingCartDto {
 
     @NotNull
     @Size(max = 5)
-    public Product productId;
+    public List<Product> products;
 
     public Long getCartId() {
         return cartId;
@@ -32,11 +34,11 @@ public class ShoppingCartDto {
         this.userId = userId;
     }
 
-    public Product getProductId() {
-        return productId;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setProductId(Product productId) {
-        this.productId = productId;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }

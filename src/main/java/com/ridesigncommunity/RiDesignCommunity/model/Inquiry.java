@@ -7,7 +7,10 @@ import jakarta.persistence.*;
 public class Inquiry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long inquiryrId;
+    private Long inquiryId;
+
+    @Column(name = "inquiry_type")
+    private String inquiryType;
 
     @Column(name = "description")
     private String description;
@@ -15,12 +18,23 @@ public class Inquiry {
     @Column(name = "email")
     private String email;
 
-    public Long getInquiryrId() {
-        return inquiryrId;
+    @Column(name = "username")
+    private String username;
+
+    public Long getInquiryId() {
+        return inquiryId;
     }
 
-    public void setInquiryrId(Long inquiryrId) {
-        this.inquiryrId = inquiryrId;
+    public void setInquiryId(Long inquiryrId) {
+        this.inquiryId = inquiryrId;
+    }
+
+    public String getInquiryType() {
+        return inquiryType;
+    }
+
+    public void setInquiryType(String inquiryType) {
+        this.inquiryType = inquiryType;
     }
 
     public String getDescription() {
@@ -37,5 +51,13 @@ public class Inquiry {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

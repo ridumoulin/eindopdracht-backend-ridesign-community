@@ -35,4 +35,8 @@ public class ShoppingCart {
         this.user = user;
     }
 
+    public List<Product> getProducts() {
+        return products;
+    }
+
 }
