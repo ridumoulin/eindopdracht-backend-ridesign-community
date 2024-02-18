@@ -21,7 +21,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void signUpUser(UserDto userDto) {
+    public void registerUser(UserDto userDto) {
         validateUserInput(userDto);
 
         if (userRepository.existsByEmail(userDto.getEmail())) {
@@ -30,7 +30,7 @@ public class UserService {
 
         User user = new User();
         user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword())); // Encoding password
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setFirstname(userDto.getFirstname());
         user.setLastname(userDto.getLastname());
         user.setUsername(userDto.getUsername());
@@ -43,7 +43,7 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public boolean loginUser(UserDto userDto) {
+    public boolean authenticateUser(UserDto userDto) {
         User user = userRepository.findByEmail(userDto.getEmail());
 
         if (user == null) {
@@ -82,6 +82,11 @@ public class UserService {
 
         userRepository.delete(userOptional.get());
         return true;
+    }
+
+    public UserDto getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        return user != null ? convertToDto(user) : null;
     }
 
     private UserDto convertToDto(User user) {

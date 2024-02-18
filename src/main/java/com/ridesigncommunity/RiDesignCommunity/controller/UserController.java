@@ -24,22 +24,24 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PostMapping("/sign-up")
-    public ResponseEntity<String> signUpUser(@Validated @RequestBody UserDto userDto) {
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@Validated @RequestBody UserDto userDto) {
         boolean emailExists = userService.existsByEmail(userDto.getEmail());
         if (emailExists) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Email address is already registered.");
         }
 
-        userService.signUpUser(userDto);
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        userService.registerUser(userDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully.");
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserDto userDto) {
-        boolean loginSuccess = userService.loginUser(userDto);
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<String> authenticateUser(@RequestBody UserDto userDto) {
+        boolean loginSuccess = userService.authenticateUser(userDto);
         if (!loginSuccess) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Invalid email or password.");
