@@ -41,14 +41,6 @@ public class ProductDto {
         this.productTitle = productTitle;
     }
 
-    public List<File> getImages() {
-        return images;
-    }
-
-    public void setImages(List<File> images) {
-        this.images = images;
-    }
-
     public String getCategory() {
         return category;
     }
@@ -87,5 +79,13 @@ public class ProductDto {
 
     public void setDeliveryOptions(List<String> deliveryOptions) {
         this.deliveryOptions = deliveryOptions;
+    }
+
+    public ImageData getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(ImageData imageData) {
+        this.imageData = imageData;
     }
 }

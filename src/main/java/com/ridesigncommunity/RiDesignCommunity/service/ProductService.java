@@ -44,6 +44,18 @@ public class ProductService {
         return optionalProduct.orElse(null);
     }
 
+    public List<Product> searchProducts(String category, String productTitle) {
+        if (category != null && productTitle != null) {
+            return productRepository. findByCategoryAndProductTitleContainingIgnoreCase(category, productTitle);
+        } else if (category != null) {
+            return productRepository.findByCategoryIgnoreCase(category);
+        } else if (productTitle != null) {
+            return productRepository.findByProductTitleContainingIgnoreCase(productTitle);
+        } else {
+            return getAllProducts();
+        }
+    }
+
     private void validateProductDto(ProductDto productDto) {
         if (productDto.getProductTitle() == null || productDto.getProductTitle().isEmpty()) {
             throw new IllegalArgumentException("Product title must not be empty");
