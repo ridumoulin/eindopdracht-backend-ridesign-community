@@ -1,12 +1,18 @@
 package com.ridesigncommunity.RiDesignCommunity.service;
 
 import com.ridesigncommunity.RiDesignCommunity.model.ImageData;
+import com.ridesigncommunity.RiDesignCommunity.model.User;
 import com.ridesigncommunity.RiDesignCommunity.repository.ImageDataRepository;
 import com.ridesigncommunity.RiDesignCommunity.repository.ProductRepository;
 import com.ridesigncommunity.RiDesignCommunity.model.Product;
+import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
 import com.ridesigncommunity.RiDesignCommunity.utils.ImageUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.io.IOException;
 
@@ -16,31 +22,77 @@ public class ImageDataService {
     private final ImageDataRepository imageDataRepository;
     private final ProductRepository productRepository;
 
-    public ImageDataService(ImageDataRepository imageDataRepository, ProductRepository productRepository) {
+    private final UserRepository userRepository;
+
+    public ImageDataService(ImageDataRepository imageDataRepository, ProductRepository productRepository, UserRepository userRepository) {
         this.imageDataRepository = imageDataRepository;
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
-    public String uploadImage(MultipartFile multipartFile, String productId) throws IOException{
-        Optional<Product> product = productRepository.findById(productId);
-        Product product1 = product.get();
+    public String uploadImages(MultipartFile multipartFile, Long productId) throws IOException {
+        Optional<Product> productOptional = productRepository.findById(productId);
+        Product product = productOptional.orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + productId));
 
         ImageData imageData = new ImageData();
-        imageData.setName(MultipartFile.getName());
+        imageData.setName(multipartFile.getOriginalFilename());
         imageData.setType(multipartFile.getContentType());
-        imageData.getImageData(ImageUtil.compressImage(MultipartFile.getBytes()));
-        imageData.setProduct(product1);
+        imageData.setImageData(ImageUtil.compressImage(multipartFile.getBytes()));
+        imageData.setProduct(product);
 
-        ImageData savedImage = new imageRepository.save(imageData);
-        product1.setImage(savedImage);
-        userRepository.save(product1);
+        ImageData savedImage = imageDataRepository.save(imageData);
+
+        product.getImages().add(savedImage);
+        productRepository.save(product);
+
         return savedImage.getName();
     }
 
-    public byte[] downloadImage(String productId) throws IOException {
-        Optional<Product> product = productRepository.findById(productId);
-        Product product1 = product.get();
+    public String uploadImage(MultipartFile multipartFile, Long userId) throws IOException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        User user = userOptional.orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
 
-        ImageData imageData = product1.getImageData();
-        return ImageUtil.decompressImage(imageData.getImageData());
+        ImageData imageData = new ImageData();
+        imageData.setName(multipartFile.getOriginalFilename());
+        imageData.setType(multipartFile.getContentType());
+        imageData.setImageData(ImageUtil.compressImage(multipartFile.getBytes()));
+        imageData.setUser(user);
+
+        ImageData savedImage = imageDataRepository.save(imageData);
+
+        user.setImageData(savedImage);
+        userRepository.save(user);
+
+        return savedImage.getName();
+    }
+
+
+    public byte[] downloadImage(Long userId) throws IOException {
+        Optional<User> user = userRepository.findById(userId);
+        User user1;
+        if (user.isPresent()) {
+            user1 = user.get();
+            ImageData imageData = user.get().getImageData();
+            if (imageData != null) {
+                return ImageUtil.decompressImage(imageData.getImageData());
+            }
+        }
+
+        return new byte[0];
+    }
+
+    public List<byte[]> downloadImages(Long productId) throws IOException {
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if (productOptional.isPresent()) {
+            List<byte[]> imagesData = new ArrayList<>();
+            Product product = productOptional.get();
+            for (ImageData imageData : product.getImages()) {
+                byte[] imageDataBytes = ImageUtil.decompressImage(imageData.getImageData());
+                imagesData.add(imageDataBytes);
+            }
+            return imagesData;
+        } else {
+            return Collections.emptyList();
+        }
+    }
 }

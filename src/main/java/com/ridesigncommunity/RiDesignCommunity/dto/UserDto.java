@@ -2,6 +2,7 @@ package com.ridesigncommunity.RiDesignCommunity.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ridesigncommunity.RiDesignCommunity.model.Authority;
+import com.ridesigncommunity.RiDesignCommunity.model.ImageData;
 import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -37,9 +38,7 @@ public class UserDto {
 
     public List<Product> favorites;
 
-    @NotEmpty
-    public Set<Authority> authorities;
-
+    public ImageData imageData;
 
     public String getEmail() { return email; }
 
@@ -55,9 +54,6 @@ public class UserDto {
 
     public List<Product> getFavorites() { return favorites; }
 
-    public Set<Authority> getAuthorities() { return authorities; }
-
-
     public void setEmail(String email) { this.email = email; }
 
     public void setPassword(String password) { this.password = password; }
@@ -72,5 +68,19 @@ public class UserDto {
 
     public void setFavorites(List<Product> favorites) { this.favorites = favorites; }
 
-    public void setAuthorities(Set<Authority> authorities) { this.authorities = authorities; }
+    public ImageData getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(ImageData imageData) {
+        this.imageData = imageData;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 }

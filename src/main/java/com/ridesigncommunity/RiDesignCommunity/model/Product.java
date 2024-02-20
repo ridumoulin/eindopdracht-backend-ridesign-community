@@ -2,7 +2,6 @@ package com.ridesigncommunity.RiDesignCommunity.model;
 
 import jakarta.persistence.*;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +15,8 @@ public class Product {
     @Column(name = "product_title")
     private String productTitle;
 
-    @OneToOne(mappedBy = "product")
-    private ImageData imageData;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ImageData> images = new ArrayList<>();
 
     @Column(name = "category")
     private String category;
@@ -53,12 +52,12 @@ public class Product {
         this.productTitle = productTitle;
     }
 
-    public ImageData getImageData() {
-        return imageData;
+    public List<ImageData> getImages() {
+        return images;
     }
 
-    public void setImageData(ImageData imageData) {
-        this.imageData = imageData;
+    public void setImages(List<ImageData> images) {
+        this.images = images;
     }
 
     public String getCategory() {
@@ -101,7 +100,4 @@ public class Product {
         this.deliveryOptions = deliveryOptions;
     }
 
-    public ImageData getImageData() {
-        return imageData;
-    }
 }

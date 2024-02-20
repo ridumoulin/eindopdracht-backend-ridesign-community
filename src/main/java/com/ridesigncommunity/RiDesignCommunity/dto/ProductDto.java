@@ -13,7 +13,7 @@ public class ProductDto {
 
     public String productTitle;
 
-    public ImageData imageData;
+    public List<ImageData> images = new ArrayList<>();
 
     public String category;
 
@@ -81,11 +81,13 @@ public class ProductDto {
         this.deliveryOptions = deliveryOptions;
     }
 
-    public ImageData getImageData() {
-        return imageData;
+    public List<ImageData> getImages() {
+        return images;
     }
 
-    public void setImageData(ImageData imageData) {
-        this.imageData = imageData;
+    public void setImages(List<ImageData> images) {
+        this.images = images;
     }
+
+
 }

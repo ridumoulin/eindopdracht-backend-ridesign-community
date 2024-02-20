@@ -73,7 +73,6 @@ public class UserController {
         if (!deleteSuccess) {
             return ResponseEntity.notFound().build();
         }
-
         return ResponseEntity.noContent().build();
     }
 }

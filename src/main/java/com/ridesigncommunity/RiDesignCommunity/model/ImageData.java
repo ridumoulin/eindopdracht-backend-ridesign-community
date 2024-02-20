@@ -1,7 +1,6 @@
 package com.ridesigncommunity.RiDesignCommunity.model;
 
 import jakarta.persistence.*;
-import com.ridesigncommunity.RiDesignCommunity.model.Product;
 
 @Entity
 @Table(name = "image_data")
@@ -17,8 +16,12 @@ public class ImageData {
     @Lob
     private byte[] imageData;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     public ImageData() {
@@ -56,6 +59,14 @@ public class ImageData {
         this.imageData = imageData;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
     public User getUser() {
         return user;
     }
@@ -63,6 +74,4 @@ public class ImageData {
     public void setUser(User user) {
         this.user = user;
     }
-
-
 }

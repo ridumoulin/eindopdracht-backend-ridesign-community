@@ -31,6 +31,9 @@ public class User {
     @Column(name = "is_ri_designer")
     private boolean isRiDesigner;
 
+    @OneToOne(mappedBy = "user")
+    private ImageData imageData;
+
     @ElementCollection
     @CollectionTable(name = "favorites", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "product_id")
@@ -101,4 +104,12 @@ public class User {
     public Set<Authority> getAuthorities() { return authorities; }
 
     public void setAuthorities(Set<Authority> authorities) { this.authorities = authorities; }
+
+    public ImageData getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(ImageData imageData) {
+        this.imageData = imageData;
+    }
 }

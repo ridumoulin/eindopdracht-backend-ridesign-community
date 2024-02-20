@@ -30,6 +30,7 @@ public class ImageUtil {
         }
         return outputStream.toByteArray();
     }
+
     public static byte[] decompressImage(byte[] data) {
         Inflater inflater = new Inflater();
         inflater.setInput(data);
@@ -42,7 +43,7 @@ public class ImageUtil {
                 outputStream.write(tmp, 0, count);
             }
             outputStream.close();
-        } catch (DataFormatException e) {
+        } catch (DataFormatException | IOException e) {
             throw new RuntimeException(e);
         }
         return outputStream.toByteArray();
