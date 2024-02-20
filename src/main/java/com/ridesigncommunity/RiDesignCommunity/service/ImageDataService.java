@@ -3,12 +3,11 @@ package com.ridesigncommunity.RiDesignCommunity.service;
 import com.ridesigncommunity.RiDesignCommunity.model.ImageData;
 import com.ridesigncommunity.RiDesignCommunity.repository.ImageDataRepository;
 import com.ridesigncommunity.RiDesignCommunity.repository.ProductRepository;
+import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.utils.ImageUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
-import java.io.IOException;
-
 import java.io.IOException;
 
 @Service
