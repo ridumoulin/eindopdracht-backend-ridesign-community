@@ -24,6 +24,9 @@ public class Product {
     @Column(name = "measurements")
     private String measurements;
 
+    @Column(name = "materials")
+    private String materials;
+
     @Column(name = "description")
     private String description;
 
@@ -35,6 +38,9 @@ public class Product {
     @Column(name = "delivery_option")
     private List<String> deliveryOptions = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Long getProductId() {
         return productId;
@@ -100,4 +106,19 @@ public class Product {
         this.deliveryOptions = deliveryOptions;
     }
 
+    public String getMaterials() {
+        return materials;
+    }
+
+    public void setMaterials(String materials) {
+        this.materials = materials;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

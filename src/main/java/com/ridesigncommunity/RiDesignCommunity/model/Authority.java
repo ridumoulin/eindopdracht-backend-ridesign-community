@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class Authority implements Serializable {
     @Id
     @Column(nullable = false)
-    private String username;
+    private String email;
 
     @Id
     @Column(nullable = false)
@@ -18,16 +18,16 @@ public class Authority implements Serializable {
     }
 
     public Authority(String username, String authority) {
-        this.username = username;
+        this.email = email;
         this.authority = authority;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getAuthority() {

@@ -1,12 +1,14 @@
 package com.ridesigncommunity.RiDesignCommunity.service;
 
-import com.ridesigncommunity.RiDesignCommunity.dto.UserDto;
+import com.ridesigncommunity.RiDesignCommunity.dto.UserInputDto;
+import com.ridesigncommunity.RiDesignCommunity.dto.UserOutputDto;
 import com.ridesigncommunity.RiDesignCommunity.model.User;
 import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,7 +23,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerUser(UserDto userDto) {
+    public void registerUser(UserInputDto userDto) {
         validateUserInput(userDto);
 
         if (userRepository.existsByEmail(userDto.getEmail())) {
@@ -43,7 +45,7 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public boolean authenticateUser(UserDto userDto) {
+    public boolean authenticateUser(UserInputDto userDto) {
         User user = userRepository.findByEmail(userDto.getEmail());
 
         if (user == null) {
@@ -53,12 +55,12 @@ public class UserService {
         return passwordEncoder.matches(userDto.getPassword(), user.getPassword());
     }
 
-    public Optional<UserDto> getUserById(Long userId) {
+    public Optional<UserOutputDto> getUserById(Long userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         return userOptional.map(this::convertToDto);
     }
 
-    public boolean updateUser(Long userId, UserDto userDto) {
+    public boolean updateUser(Long userId, UserInputDto userDto) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
             return false;
@@ -84,13 +86,45 @@ public class UserService {
         return true;
     }
 
-    public UserDto getUserByEmail(String email) {
+    public UserOutputDto getUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
         return user != null ? convertToDto(user) : null;
     }
 
-    private UserDto convertToDto(User user) {
-        UserDto userDto = new UserDto();
+    public boolean addFavorite(Long userId, Long productId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+
+        User user = userOptional.get();
+        List<Long> favorites = user.getFavorites();
+        if (!favorites.contains(productId)) {
+            favorites.add(productId);
+            user.setFavorites(favorites);
+            userRepository.save(user);
+        }
+        return true;
+    }
+
+    public boolean removeFavorite(Long userId, Long productId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+
+        User user = userOptional.get();
+        List<Long> favorites = user.getFavorites();
+        if (favorites.contains(productId)) {
+            favorites.remove(productId);
+            user.setFavorites(favorites);
+            userRepository.save(user);
+        }
+        return true;
+    }
+
+    private UserOutputDto convertToDto(User user) {
+        UserOutputDto userDto = new UserOutputDto();
         userDto.setEmail(user.getEmail());
         userDto.setFirstname(user.getFirstname());
         userDto.setLastname(user.getLastname());
@@ -100,7 +134,7 @@ public class UserService {
         return userDto;
     }
 
-    private void validateUserInput(UserDto userDto) {
+    private void validateUserInput(UserInputDto userDto) {
         if (userDto.getUsername() == null || userDto.getUsername().isEmpty()) {
             throw new IllegalArgumentException("Username cannot be empty.");
         }

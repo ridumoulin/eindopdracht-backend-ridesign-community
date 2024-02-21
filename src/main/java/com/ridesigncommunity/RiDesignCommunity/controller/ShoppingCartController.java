@@ -1,6 +1,7 @@
 package com.ridesigncommunity.RiDesignCommunity.controller;
 
 import com.ridesigncommunity.RiDesignCommunity.dto.ShoppingCartDto;
+import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,10 +27,10 @@ public class ShoppingCartController {
         return new ResponseEntity<>(updatedCart, HttpStatus.OK);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ShoppingCartDto>> getUserShoppingCarts(@PathVariable Long userId) {
-        List<ShoppingCartDto> userShoppingCarts = shoppingCartService.getUserShoppingCarts(userId);
-        return new ResponseEntity<>(userShoppingCarts, HttpStatus.OK);
+    @GetMapping("/user/{userId}/products")
+    public ResponseEntity<List<Product>> getProductsInCartByUserId(@PathVariable Long userId) {
+        List<Product> productsInCart = shoppingCartService.getProductsInCartByUserId(userId);
+        return ResponseEntity.ok().body(productsInCart);
     }
 
     @DeleteMapping("/user/{userId}/remove-from-cart/{productId}")

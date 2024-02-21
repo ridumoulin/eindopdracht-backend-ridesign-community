@@ -35,9 +35,9 @@ public class User {
     private ImageData imageData;
 
     @ElementCollection
-    @CollectionTable(name = "favorites", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "user_favorites", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "product_id")
-    private List<Product> favorites = new ArrayList<>();
+    private List<Long> favorites = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "user",
@@ -97,9 +97,9 @@ public class User {
         this.isRiDesigner = isRiDesigner;
     }
 
-    public List<Product> getFavorites() { return favorites; }
-
-    public void setFavorites(List<Product> favorites) { this.favorites = favorites; }
+    public void setFavorites(List<Long> favorites) {
+        this.favorites = favorites;
+    }
 
     public Set<Authority> getAuthorities() { return authorities; }
 
@@ -111,5 +111,9 @@ public class User {
 
     public void setImageData(ImageData imageData) {
         this.imageData = imageData;
+    }
+
+    public List<Long> getFavorites() {
+        return favorites;
     }
 }

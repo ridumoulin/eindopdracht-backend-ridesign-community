@@ -29,8 +29,13 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts(@RequestParam(required = false) String category) {
+        List<Product> products;
+        if (category != null) {
+            products = productService.getProductsByCategory(category);
+        } else {
+            products = productService.getAllProducts();
+        }
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -56,6 +61,12 @@ public class ProductController {
                                                         @RequestParam(required = false) String productTitle) {
         List<Product> products = productService.searchProducts(category, productTitle);
         return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<List<Product>> getProductsByUserId(@PathVariable Long userId) {
+        List<Product> products = productService.getProductsByUserId(userId);
+        return ResponseEntity.ok().body(products);
     }
 }
 

@@ -9,7 +9,6 @@ import com.ridesigncommunity.RiDesignCommunity.repository.ShoppingCartRepository
 import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Collections;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +27,16 @@ public class ShoppingCartService {
         this.productRepository = productRepository;
     }
 
+    public List<Product> getProductsInCartByUserId(Long userId) {
+        Optional<ShoppingCart> cartOptional = Optional.ofNullable(shoppingCartRepository.findByUserId(userId));
+        if (cartOptional.isPresent()) {
+            ShoppingCart cart = cartOptional.get();
+            return cart.getProducts();
+        } else {
+            throw new IllegalStateException("Shopping cart not found for user with ID: " + userId);
+        }
+    }
+
     public ShoppingCartDto addProductToCart(Long productId, Long userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         Optional<Product> productOptional = productRepository.findById(productId);
@@ -44,15 +53,6 @@ public class ShoppingCartService {
             return mapToDto(savedCart);
         } else {
             throw new IllegalArgumentException("User or Product not found");
-        }
-    }
-
-    public List<ShoppingCartDto> getUserShoppingCarts(Long userId) {
-        Optional<ShoppingCart> shoppingCartOptional = shoppingCartRepository.findById(userId);
-        if (shoppingCartOptional.isPresent()) {
-            return Collections.singletonList(mapToDto(shoppingCartOptional.get()));
-        } else {
-            throw new IllegalStateException("No shopping cart found for user ID: " + userId);
         }
     }
 

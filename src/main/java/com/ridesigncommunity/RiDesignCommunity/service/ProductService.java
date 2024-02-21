@@ -39,6 +39,14 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public List<Product> getProductsByCategory(String category) {
+        return productRepository.findByCategory(category);
+    }
+
+    public List<Product> getProductsByUserId(Long userId) {
+        return productRepository.findByUserId(userId);
+    }
+
     public Product getProductById(Long productId) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
         return optionalProduct.orElse(null);

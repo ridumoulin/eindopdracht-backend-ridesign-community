@@ -1,6 +1,7 @@
 package com.ridesigncommunity.RiDesignCommunity.controller;
 
-import com.ridesigncommunity.RiDesignCommunity.dto.UserDto;
+import com.ridesigncommunity.RiDesignCommunity.dto.UserInputDto;
+import com.ridesigncommunity.RiDesignCommunity.dto.UserOutputDto;
 import com.ridesigncommunity.RiDesignCommunity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.Optional;
 
@@ -25,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@Validated @RequestBody UserDto userDto) {
+    public ResponseEntity<String> registerUser(@Validated @RequestBody UserInputDto userDto) {
         boolean emailExists = userService.existsByEmail(userDto.getEmail());
         if (emailExists) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -40,7 +42,7 @@ public class UserController {
 
 
     @PostMapping("/authenticate")
-    public ResponseEntity<String> authenticateUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<String> authenticateUser(@RequestBody UserInputDto userDto) {
         boolean loginSuccess = userService.authenticateUser(userDto);
         if (!loginSuccess) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -51,14 +53,14 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
-        Optional<UserDto> userDtoOptional = userService.getUserById(userId);
+    public ResponseEntity<UserOutputDto> getUserById(@PathVariable Long userId) {
+        Optional<UserOutputDto> userDtoOptional = userService.getUserById(userId);
         return userDtoOptional.map(dto -> ResponseEntity.ok().body(dto))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<String> updateUser(@PathVariable Long userId, @Validated @RequestBody UserDto userDto) {
+    public ResponseEntity<String> updateUser(@PathVariable Long userId, @Validated @RequestBody UserInputDto userDto) {
         boolean updateSuccess = userService.updateUser(userId, userDto);
         if (!updateSuccess) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
@@ -74,6 +76,24 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/addFavorite/{userId}/{productId}")
+    public ResponseEntity<String> addFavorite(@PathVariable Long userId, @PathVariable Long productId) {
+        boolean success = userService.addFavorite(userId, productId);
+        if (!success) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok("Product added to favorites successfully.");
+    }
+
+    @DeleteMapping("/removeFavorite/{userId}/{productId}")
+    public ResponseEntity<String> removeFavorite(@PathVariable Long userId, @PathVariable Long productId) {
+        boolean success = userService.removeFavorite(userId, productId);
+        if (!success) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok("Product removed from favorites successfully.");
     }
 }
 

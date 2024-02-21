@@ -2,6 +2,8 @@ package com.ridesigncommunity.RiDesignCommunity.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ridesigncommunity.RiDesignCommunity.model.ImageData;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,16 +13,26 @@ public class ProductDto {
     @JsonProperty("userId")
     public Long productId;
 
+    @NotBlank
     public String productTitle;
 
+    @NotBlank
     public List<ImageData> images = new ArrayList<>();
 
+    @NotBlank
     public String category;
 
+    @NotBlank
     public String measurements;
 
+    @NotBlank
+    private String materials;
+
+    @NotBlank
+    @Size(min=30)
     public String description;
 
+    @NotBlank
     public double price;
 
     public List<String> deliveryOptions = new ArrayList<>();
@@ -89,5 +101,11 @@ public class ProductDto {
         this.images = images;
     }
 
+    public String getMaterials() {
+        return materials;
+    }
 
+    public void setMaterials(String materials) {
+        this.materials = materials;
+    }
 }

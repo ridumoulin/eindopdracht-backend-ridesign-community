@@ -1,8 +1,8 @@
 package com.ridesigncommunity.RiDesignCommunity.security;
 
-import com.ridesigncommunity.RiDesignCommunity.dto.UserDto;
 import com.ridesigncommunity.RiDesignCommunity.model.Authority;
-import com.ridesigncommunity.RiDesignCommunity.service.UserService;
+import com.ridesigncommunity.RiDesignCommunity.model.User;
+import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,26 +16,30 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public CustomUserDetailsService(UserService userService) {
-        this.userService = userService;
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) {
-        UserDto userDto = userService.getUserByEmail(email);
+    public UserDetails loadUserByUsername(String username) {
+        return loadUserByEmail(username);
+    }
 
-        if (userDto == null) {
+    public UserDetails loadUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
             throw new RuntimeException("User not found with email: " + email);
         }
 
-        Collection<? extends GrantedAuthority> authorities = mapAuthorities(userDto.getAuthorities());
+        Collection<? extends GrantedAuthority> authorities = mapAuthorities(user.getAuthorities());
 
         return new CustomUserDetails(
-                userDto.getUsername(),
-                userDto.getPassword(),
+                user.getEmail(),
+                user.getPassword(),
                 authorities
         );
     }
