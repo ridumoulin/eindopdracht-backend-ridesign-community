@@ -15,7 +15,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtUtil {
-    private final static String SECRET_KEY = "your_secret_key_here";
+    private final static String SECRET_KEY = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);

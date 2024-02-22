@@ -1,7 +1,7 @@
 INSERT INTO image_data (image_url) VALUES ('assets/photo-profile-ri.png');
 
 INSERT INTO users (email, password, first_name, last_name, user_name, is_ri_designer, image_data_id)
-VALUES ('riannedumoulin@gmail.com', 'RiisAdmin', 'Rianne', 'van der Molen', 'RiDumoulin', true, (SELECT image_data_id FROM image_data WHERE image_url = 'assets/photo-profile-ri.png'));
+VALUES ('riannedumoulin@gmail.com', '$2a$10$0MNh5e7DP0vNV44QK10biu28kzxY3IEH47O6vX96rjChFstkg54S6', 'Rianne', 'van der Molen', 'RiDumoulin', true, (SELECT image_data_id FROM image_data WHERE image_url = 'assets/photo-profile-ri.png'));
 
 INSERT INTO authorities (user_id, authority)
 VALUES ((SELECT user_id FROM users WHERE email = 'riannedumoulin@gmail.com'), 'ROLE_ADMIN');
@@ -10,7 +10,7 @@ VALUES ((SELECT user_id FROM users WHERE email = 'riannedumoulin@gmail.com'), 'R
 INSERT INTO image_data (image_url) VALUES ('assets/photo-profile-olaf.jpeg');
 
 INSERT INTO users (email, password, first_name, last_name, user_name, is_ri_designer, image_data_id)
-VALUES ('olaf.holleman@outlook.com', 'OlafjeisDesigner', 'Olaf', 'Holleman', 'Brolaf', true, (SELECT image_data_id FROM image_data WHERE image_url = 'assets/photo-profile-olaf.jpeg'));
+VALUES ('olaf.holleman@outlook.com', '$2a$10$PWhlye6v88xBXenDW4W2U.qabxAWP1WbEte4aDXhQbFzJc3hV9fAC', 'Olaf', 'Holleman', 'Brolaf', true, (SELECT image_data_id FROM image_data WHERE image_url = 'assets/photo-profile-olaf.jpeg'));
 
 INSERT INTO authorities (user_id, authority)
 VALUES ((SELECT user_id FROM users WHERE email = 'olaf.holleman@outlook.com'), 'ROLE_USER');
@@ -19,7 +19,7 @@ VALUES ((SELECT user_id FROM users WHERE email = 'olaf.holleman@outlook.com'), '
 INSERT INTO image_data (image_url) VALUES ('assets/photo-profile-catrina.png');
 
 INSERT INTO users (email, password, first_name, last_name, user_name, is_ri_designer, image_data_id)
-VALUES ('catrina.hollander@gmail.com', 'CatrientjeisCool', 'Catrina', 'Hollander', 'CHDesigner', true, (SELECT image_data_id FROM image_data WHERE image_url = 'assets/photo-profile-catrina.png'));
+VALUES ('catrina.hollander@gmail.com', '$2a$10$7uWUGqzHn2rs8N0LdVNN3O.hRE6uS5.jCtT6gKd1T2yCTIvyY3/YG', 'Catrina', 'Hollander', 'CHDesigner', true, (SELECT image_data_id FROM image_data WHERE image_url = 'assets/photo-profile-catrina.png'));
 
 INSERT INTO authorities (user_id, authority)
 VALUES ((SELECT user_id FROM users WHERE email = 'catrina.hollander@gmail.com'), 'ROLE_USER');
@@ -91,3 +91,19 @@ INSERT INTO images (6, 18) VALUES (6, (SELECT 18 FROM image_data WHERE image_url
 
 INSERT INTO products (product_title, category, measurements, materials, description, price, user_id)
 VALUES ('Open kast met repurposed steigerhouten schuifdeur', 'Kasten', '80x43x122 cm', 'Hout, steigerhout', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum sagittis nisi, eu consectetur velit. Cras nec nunc eget arcu dictum vulputate. Proin aliquet quam quis magna consequat, ac blandit eros finibus. Nam auctor vestibulum velit, nec mattis enim venenatis et. Duis eget feugiat elit.', 229.99, 3);
+
+
+SET @catrina_user_id = (SELECT user_id FROM users WHERE email = 'catrina.hollander@gmail.com');
+
+SET @catrina_cart_id = (SELECT cart_id FROM shopping_carts WHERE user_id = @catrina_user_id);
+
+INSERT INTO cart_products (cart_id, product_id) VALUES
+                                                    (@catrina_cart_id, 3),
+                                                    (@catrina_cart_id, 4);
+
+INSERT INTO inquiries (inquiry_type, description, email, username)
+VALUES ('Aanvraag RiDesign', 'Ik heb een tafel die er niet heel mooi meer uitziet door beschadigingen. Nu wilde ik eerst een nieuwe kopen, maar toen vond ik het toch wel een beetje zonde. Wellicht is het hout nog mooi. Zouden jullie een tafel willen RiDesignen?', 'catrina.hollander@gmail.com', 'CHDesigner');
+
+
+INSERT INTO inquiries (inquiry_type, description, email, username)
+VALUES ('Inleveren meubelstuk', 'Beste, ik heb nog een kast waarvan het hout nog goed is. De kast hoef ik zelf niet meer, ik breng de kast graag naar jullie.', 'olaf.holleman@outlook.com', 'Brolaf');
