@@ -123,8 +123,9 @@ public class UserService {
         return true;
     }
 
-    private UserOutputDto convertToDto(User user) {
+    public UserOutputDto convertToDto(User user) {
         UserOutputDto userDto = new UserOutputDto();
+        userDto.setUserId(user.getUserId());
         userDto.setEmail(user.getEmail());
         userDto.setFirstname(user.getFirstname());
         userDto.setLastname(user.getLastname());
@@ -134,7 +135,7 @@ public class UserService {
         return userDto;
     }
 
-    private void validateUserInput(UserInputDto userDto) {
+    public void validateUserInput(UserInputDto userDto) {
         if (userDto.getUsername() == null || userDto.getUsername().isEmpty()) {
             throw new IllegalArgumentException("Username cannot be empty.");
         }
@@ -151,4 +152,5 @@ public class UserService {
             throw new IllegalArgumentException("Last name cannot be empty.");
         }
     }
+
 }

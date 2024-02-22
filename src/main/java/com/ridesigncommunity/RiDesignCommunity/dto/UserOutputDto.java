@@ -97,4 +97,5 @@ public class UserOutputDto {
     public void setFavorites(List<Long> favorites) {
         this.favorites = favorites;
     }
+
 }
