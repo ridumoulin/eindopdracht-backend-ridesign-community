@@ -21,15 +21,15 @@ public class ShoppingCartController {
         this.shoppingCartService = shoppingCartService;
     }
 
-    @PostMapping("/user/{userId}/products/{productId}/add-to-cart")
-    public ResponseEntity<ShoppingCartDto> addProductToCart(@PathVariable Long userId, @PathVariable Long productId) {
-        ShoppingCartDto updatedCart = shoppingCartService.addProductToCart(productId, userId);
+    @PostMapping("/user/{username}/products/{productId}/add-to-cart")
+    public ResponseEntity<ShoppingCartDto> addProductToCart(@PathVariable String username, @PathVariable Long productId) {
+        ShoppingCartDto updatedCart = shoppingCartService.addProductToCart(productId, username);
         return new ResponseEntity<>(updatedCart, HttpStatus.OK);
     }
 
-    @GetMapping("/user/{userId}/products")
-    public ResponseEntity<List<Product>> getProductsInCartByUserId(@PathVariable Long userId) {
-        List<Product> productsInCart = shoppingCartService.getProductsInCartByUserId(userId);
+    @GetMapping("/user/{username}/products")
+    public ResponseEntity<List<Product>> getProductsInCartByUserId(@PathVariable String username) {
+        List<Product> productsInCart = shoppingCartService.getProductsInCartByUsername(username);
         return ResponseEntity.ok().body(productsInCart);
     }
 

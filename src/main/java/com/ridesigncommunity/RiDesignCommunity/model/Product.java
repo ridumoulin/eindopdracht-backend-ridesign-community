@@ -27,7 +27,7 @@ public class Product {
     @Column(name = "materials")
     private String materials;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 10000)
     private String description;
 
     @Column(name = "price")
@@ -35,11 +35,11 @@ public class Product {
 
     @ElementCollection
     @CollectionTable(name = "delivery_options", joinColumns = @JoinColumn(name = "product_id"))
-    @Column(name = "delivery_option")
+    @Column(name = "delivery_options")
     private List<String> deliveryOptions = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "products")
     private User user;
 
     public Long getProductId() {

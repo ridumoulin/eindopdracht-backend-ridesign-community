@@ -17,7 +17,7 @@ public class Authority implements Serializable {
     public Authority() {
     }
 
-    public Authority(String username, String authority) {
+    public Authority(String email, String authority) {
         this.email = email;
         this.authority = authority;
     }

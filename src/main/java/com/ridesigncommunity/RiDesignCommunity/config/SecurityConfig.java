@@ -42,7 +42,7 @@ public class SecurityConfig {
     protected SecurityFilterChain filter (HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests( auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/authentication").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/authenticate").permitAll()
                         .requestMatchers(HttpMethod.POST, "/products").permitAll()
                         .requestMatchers(HttpMethod.GET, "/inquiries").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/{id}").hasRole("ADMIN")

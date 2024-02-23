@@ -48,9 +48,9 @@ public class ImageDataService {
         return savedImage.getName();
     }
 
-    public String uploadImage(MultipartFile multipartFile, Long userId) throws IOException {
-        Optional<User> userOptional = userRepository.findById(userId);
-        User user = userOptional.orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+    public String uploadImage(MultipartFile multipartFile, String username) throws IOException {
+        Optional<User> userOptional = userRepository.findById(username);
+        User user = userOptional.orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + username));
 
         ImageData imageData = new ImageData();
         imageData.setName(multipartFile.getOriginalFilename());
@@ -67,8 +67,8 @@ public class ImageDataService {
     }
 
 
-    public byte[] downloadImage(Long userId) throws IOException {
-        Optional<User> user = userRepository.findById(userId);
+    public byte[] downloadImage(String username) throws IOException {
+        Optional<User> user = userRepository.findById(username);
         User user1;
         if (user.isPresent()) {
             user1 = user.get();

@@ -26,7 +26,7 @@ public class UserInputDto {
     @Size(min=8, max=30)
     public String password;
 
-    @NotBlank(message = "Firstname")
+    @NotBlank(message = "Firstname is required")
     public String firstname;
 
     @NotBlank(message = "Lastname is required")

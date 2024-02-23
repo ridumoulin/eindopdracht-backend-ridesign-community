@@ -52,16 +52,16 @@ public class UserController {
         return ResponseEntity.ok("Login successful.");
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserOutputDto> getUserById(@PathVariable Long userId) {
-        Optional<UserOutputDto> userDtoOptional = userService.getUserById(userId);
+    @GetMapping("/{username}")
+    public ResponseEntity<UserOutputDto> getUserById(@PathVariable String username) {
+        Optional<UserOutputDto> userDtoOptional = userService.getUserById(username);
         return userDtoOptional.map(dto -> ResponseEntity.ok().body(dto))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<String> updateUser(@PathVariable Long userId, @Validated @RequestBody UserInputDto userDto) {
-        boolean updateSuccess = userService.updateUser(userId, userDto);
+    @PutMapping("/{username}")
+    public ResponseEntity<String> updateUser(@PathVariable String username, @Validated @RequestBody UserInputDto userDto) {
+        boolean updateSuccess = userService.updateUser(username, userDto);
         if (!updateSuccess) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
@@ -69,27 +69,27 @@ public class UserController {
         return ResponseEntity.ok("User profile updated successfully.");
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
-        boolean deleteSuccess = userService.deleteUser(userId);
+    @DeleteMapping("/{username}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String username) {
+        boolean deleteSuccess = userService.deleteUser(username);
         if (!deleteSuccess) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/addFavorite/{userId}/{productId}")
-    public ResponseEntity<String> addFavorite(@PathVariable Long userId, @PathVariable Long productId) {
-        boolean success = userService.addFavorite(userId, productId);
+    @PostMapping("/addFavorite/{username}/{productId}")
+    public ResponseEntity<String> addFavorite(@PathVariable String username, @PathVariable Long productId) {
+        boolean success = userService.addFavorite(username, productId);
         if (!success) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok("Product added to favorites successfully.");
     }
 
-    @DeleteMapping("/removeFavorite/{userId}/{productId}")
-    public ResponseEntity<String> removeFavorite(@PathVariable Long userId, @PathVariable Long productId) {
-        boolean success = userService.removeFavorite(userId, productId);
+    @DeleteMapping("/removeFavorite/{username}/{productId}")
+    public ResponseEntity<String> removeFavorite(@PathVariable String username, @PathVariable Long productId) {
+        boolean success = userService.removeFavorite(username, productId);
         if (!success) {
             return ResponseEntity.notFound().build();
         }

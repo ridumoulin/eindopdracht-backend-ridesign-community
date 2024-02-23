@@ -36,14 +36,14 @@ public class ImageDataController {
 
     @PostMapping("/product/{productId}")
     public ResponseEntity<Object> uploadImages(@RequestParam("file") MultipartFile multipartFile, @PathVariable Long productId) throws IOException {
-        String image = imageDataService.uploadImage(multipartFile, productId);
+        String image = imageDataService.uploadImages(multipartFile, productId);
         return ResponseEntity.ok("File has been uploaded for product with ID " + productId + ": " + image);
     }
 
-    @PostMapping("/user/{userId}")
-    public ResponseEntity<Object> uploadImage(@RequestParam("file") MultipartFile multipartFile, @PathVariable Long userId) throws IOException {
-        String image = imageDataService.uploadImage(multipartFile, userId);
-        return ResponseEntity.ok("File has been uploaded for user with ID " + userId + ": " + image);
+    @PostMapping("/user/{username}")
+    public ResponseEntity<Object> uploadImage(@RequestParam("file") MultipartFile multipartFile, @PathVariable String username) throws IOException {
+        String image = imageDataService.uploadImage(multipartFile, username);
+        return ResponseEntity.ok("File has been uploaded for user with ID " + username + ": " + image);
     }
 
     @GetMapping("/product/{productId}")
@@ -66,10 +66,10 @@ public class ImageDataController {
         }
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<Object> downloadImage(@PathVariable Long userId) throws IOException {
-        byte[] image = imageDataService.downloadImage(userId);
-        Optional<User> user = userRepository.findById(userId);
+    @GetMapping("/user/{username}")
+    public ResponseEntity<Object> downloadImage(@PathVariable String username) throws IOException {
+        byte[] image = imageDataService.downloadImage(username);
+        Optional<User> user = userRepository.findById(username);
         Optional<ImageData> dbImageData = imageDataRepository.findById(user.get().getImageData().getId());
         MediaType mediaType = MediaType.valueOf(dbImageData.get().getType());
         return ResponseEntity.ok().contentType(mediaType).body(image);

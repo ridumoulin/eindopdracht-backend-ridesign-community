@@ -27,18 +27,18 @@ public class ShoppingCartService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getProductsInCartByUserId(Long userId) {
-        Optional<ShoppingCart> cartOptional = Optional.ofNullable(shoppingCartRepository.findByUserId(userId));
+    public List<Product> getProductsInCartByUsername(String username) {
+        Optional<ShoppingCart> cartOptional = Optional.ofNullable(shoppingCartRepository.findShoppingCartByUser_Username(username));
         if (cartOptional.isPresent()) {
             ShoppingCart cart = cartOptional.get();
             return cart.getProducts();
         } else {
-            throw new IllegalStateException("Shopping cart not found for user with ID: " + userId);
+            throw new IllegalStateException("Shopping cart not found for user with ID: " + username);
         }
     }
 
-    public ShoppingCartDto addProductToCart(Long productId, Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+    public ShoppingCartDto addProductToCart(Long productId, String username) {
+        Optional<User> userOptional = userRepository.findById(username);
         Optional<Product> productOptional = productRepository.findById(productId);
 
         if (userOptional.isPresent() && productOptional.isPresent()) {

@@ -26,7 +26,7 @@ public class UserService {
     public void registerUser(UserInputDto userDto) {
         validateUserInput(userDto);
 
-        if (userRepository.existsByEmail(userDto.getEmail())) {
+        if (userRepository.existsById(userDto.getEmail())) {
             throw new IllegalArgumentException("Email address is already registered.");
         }
 
@@ -42,26 +42,26 @@ public class UserService {
     }
 
     public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+        return userRepository.existsById(email);
     }
 
     public boolean authenticateUser(UserInputDto userDto) {
-        User user = userRepository.findByEmail(userDto.getEmail());
+        Optional<User> oUser = userRepository.findById(userDto.getEmail());
 
-        if (user == null) {
+        if (oUser == null) {
             return false;
         }
 
-        return passwordEncoder.matches(userDto.getPassword(), user.getPassword());
+        return passwordEncoder.matches(userDto.getPassword(), oUser.get().getPassword());
     }
 
-    public Optional<UserOutputDto> getUserById(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+    public Optional<UserOutputDto> getUserById(String username) {
+        Optional<User> userOptional = userRepository.findById(username);
         return userOptional.map(this::convertToDto);
     }
 
-    public boolean updateUser(Long userId, UserInputDto userDto) {
-        Optional<User> userOptional = userRepository.findById(userId);
+    public boolean updateUser(String username, UserInputDto userDto) {
+        Optional<User> userOptional = userRepository.findById(username);
         if (userOptional.isEmpty()) {
             return false;
         }
@@ -76,8 +76,8 @@ public class UserService {
         return true;
     }
 
-    public boolean deleteUser(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+    public boolean deleteUser(String username) {
+        Optional<User> userOptional = userRepository.findById(username);
         if (userOptional.isEmpty()) {
             return false;
         }
@@ -87,12 +87,17 @@ public class UserService {
     }
 
     public UserOutputDto getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email);
-        return user != null ? convertToDto(user) : null;
+        Optional<User> oUser = userRepository.findById(email);
+        if (oUser.isPresent()){
+        return convertToDto(oUser.get());
+        }
+        else {
+            return null;
+        }
     }
 
-    public boolean addFavorite(Long userId, Long productId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+    public boolean addFavorite(String username, Long productId) {
+        Optional<User> userOptional = userRepository.findById(username);
         if (userOptional.isEmpty()) {
             return false;
         }
@@ -107,8 +112,8 @@ public class UserService {
         return true;
     }
 
-    public boolean removeFavorite(Long userId, Long productId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+    public boolean removeFavorite(String username, Long productId) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
             return false;
         }
@@ -125,7 +130,7 @@ public class UserService {
 
     public UserOutputDto convertToDto(User user) {
         UserOutputDto userDto = new UserOutputDto();
-        userDto.setUserId(user.getUserId());
+//        userDto.setUserId(user.getUserId());
         userDto.setEmail(user.getEmail());
         userDto.setFirstname(user.getFirstname());
         userDto.setLastname(user.getLastname());

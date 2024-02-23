@@ -182,16 +182,16 @@ public class UserServiceTest {
 
     @Test
     public void testAddFavorite_Success() {
-        Long userId = 1L;
+        Long username = 1L;
         Long productId = 4L;
 
         User user = new User();
-        user.setUserId(userId);
+        user.setUserUsername(username);
         user.setFavorites(new ArrayList<>());
 
-        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
+        when(userRepositoryMock.findById(username)).thenReturn(Optional.of(user));
 
-        boolean result = userService.addFavorite(userId, productId);
+        boolean result = userService.addFavorite(username, productId);
 
         assertTrue(result);
         assertTrue(user.getFavorites().contains(productId));

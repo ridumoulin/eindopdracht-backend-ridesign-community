@@ -9,10 +9,10 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long userId;
 
+    @Id
     @Column(name = "email", nullable = false)
     private String email;
 
@@ -25,31 +25,35 @@ public class User {
     @Column(name = "last_name")
     private String lastname;
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", unique = true)
     private String username;
 
     @Column(name = "is_ri_designer")
     private boolean isRiDesigner;
 
+
     @OneToOne(mappedBy = "user")
     private ImageData imageData;
 
+    @OneToMany(mappedBy = "user")
+    private List<Product> products;
+
     @ElementCollection
-    @CollectionTable(name = "user_favorites", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "user_favorites", joinColumns = @JoinColumn(name = "email"))
     @Column(name = "product_id")
     private List<Long> favorites = new ArrayList<>();
 
     @OneToMany(
-            mappedBy = "user",
+            mappedBy = "email",
             targetEntity = Authority.class,
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
 
-    public Long getUserId() { return userId; }
-
-    public void setUserId(Long userId) { this.userId = userId;}
+//    public Long getUserId() { return userId; }
+//
+//    public void setUserId(Long userId) { this.userId = userId;}
 
     public String getFirstname() {
         return firstname;
@@ -117,3 +121,5 @@ public class User {
         return favorites;
     }
 }
+
+

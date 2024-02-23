@@ -3,21 +3,24 @@ package com.ridesigncommunity.RiDesignCommunity.service;
 import com.ridesigncommunity.RiDesignCommunity.dto.ProductDto;
 import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.repository.ProductRepository;
+import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, UserRepository userRepository) {
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
     public Product createProduct(ProductDto productDto) {
@@ -27,6 +30,7 @@ public class ProductService {
         product.setProductTitle(productDto.getProductTitle());
         product.setCategory(productDto.getCategory());
         product.setMeasurements(productDto.getMeasurements());
+        product.setMaterials(productDto.getMaterials());
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
         product.setDeliveryOptions(productDto.getDeliveryOptions());
@@ -36,20 +40,32 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        List<Product> allProducts = productRepository.findAll();
+        List<Product> availableProducts = new ArrayList<>();
+
+        for (Product product : allProducts) {
+            if (product.getPrice() > 0) {
+                availableProducts.add(product);
+            }
+        }
+        return availableProducts;
     }
 
     public List<Product> getProductsByCategory(String category) {
-        return productRepository.findByCategory(category);
+        String trimmedCategory = category.trim().toLowerCase();
+        return productRepository.findByCategory(trimmedCategory);
     }
 
-    public List<Product> getProductsByUserId(Long userId) {
-        return productRepository.findByUserId(userId);
+    public List<Product> getProductsByUsername(String username) {
+        if (!userRepository.existsById(username)) {
+            throw new EntityNotFoundException("User not found with ID: " + username);
+        }
+        return productRepository.findProductByUser_Username(username);
     }
 
     public Product getProductById(Long productId) {
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-        return optionalProduct.orElse(null);
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productId));
     }
 
     public List<Product> searchProducts(String category, String productTitle) {

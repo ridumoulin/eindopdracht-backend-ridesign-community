@@ -63,9 +63,9 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<List<Product>> getProductsByUserId(@PathVariable Long userId) {
-        List<Product> products = productService.getProductsByUserId(userId);
+    @GetMapping("/users/{username}")
+    public ResponseEntity<List<Product>> getProductsByUserId(@PathVariable String username) {
+        List<Product> products = productService.getProductsByUsername(username);
         return ResponseEntity.ok().body(products);
     }
 }

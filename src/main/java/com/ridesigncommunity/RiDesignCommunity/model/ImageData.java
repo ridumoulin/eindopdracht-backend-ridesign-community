@@ -17,11 +17,11 @@ public class ImageData {
     private byte[] imageData;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+//    @JoinColumn(name = "product_id", referencedColumnName = "images")
     private Product product;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+//    @JoinColumn(name = "user_id", referencedColumnName = "image_data")
     private User user;
 
     public ImageData() {
