@@ -40,18 +40,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully.");
     }
 
-
-    @PostMapping("/authenticate")
-    public ResponseEntity<String> authenticateUser(@RequestBody UserInputDto userDto) {
-        boolean loginSuccess = userService.authenticateUser(userDto);
-        if (!loginSuccess) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid email or password.");
-        }
-
-        return ResponseEntity.ok("Login successful.");
-    }
-
     @GetMapping("/{username}")
     public ResponseEntity<UserOutputDto> getUserById(@PathVariable String username) {
         Optional<UserOutputDto> userDtoOptional = userService.getUserById(username);
