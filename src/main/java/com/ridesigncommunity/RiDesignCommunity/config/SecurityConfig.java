@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests( auth -> auth
                         .requestMatchers(HttpMethod.POST, "/users/authenticate").permitAll()
                         .requestMatchers(HttpMethod.POST, "/products").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products").permitAll()
                         .requestMatchers(HttpMethod.GET, "/inquiries").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/{id}").hasRole("ADMIN")
                         .requestMatchers("/authenticate").permitAll()

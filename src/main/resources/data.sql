@@ -1,6 +1,6 @@
--- INSERT INTO image_data (image_url) VALUES ('assets/photo-profile-ri.png');
--- INSERT INTO image_data (image_url) VALUES ('assets/photo-profile-olaf.jpeg');
--- INSERT INTO image_data (image_url) VALUES ('assets/photo-profile-catrina.png');
+INSERT INTO image_data (image_url) VALUES ('assets/photo-profile-ri.png');
+INSERT INTO image_data (image_url) VALUES ('assets/photo-profile-olaf.jpeg');
+INSERT INTO image_data (image_url) VALUES ('assets/photo-profile-catrina.png');
 
 
 INSERT INTO users (email, password, first_name, last_name, user_name, is_ri_designer)
@@ -15,46 +15,46 @@ VALUES ('riannedumoulin@gmail.com', 'ROLE_ADMIN'),
        ('catrina.hollander@gmail.com', 'ROLE_USER');
 
 
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-tables-1.jpeg');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-tables-2.jpeg');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-tables-3.jpeg');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-chair-olaf-1.jpeg');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-chair-olaf-2.jpeg');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-chair-olaf-3.jpeg');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-tables-ri-1.png');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-tables-ri-2.png');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-tables-ri-3.png');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-chair-ri-1.JPG');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-chair-ri-2.JPG');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-chair-ri-3.JPG');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-bed-1.jpeg');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-bed-2.jpeg');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-bed-3.jpeg');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-closet-1.jpeg');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-closet-2.jpeg');
--- INSERT INTO image_data (image_url) VALUES ('assets/products/photo-closet-3.jpeg');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-tables-1.jpeg');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-tables-2.jpeg');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-tables-3.jpeg');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-chair-olaf-1.jpeg');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-chair-olaf-2.jpeg');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-chair-olaf-3.jpeg');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-tables-ri-1.png');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-tables-ri-2.png');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-tables-ri-3.png');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-chair-ri-1.JPG');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-chair-ri-2.JPG');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-chair-ri-3.JPG');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-bed-1.jpeg');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-bed-2.jpeg');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-bed-3.jpeg');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-closet-1.jpeg');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-closet-2.jpeg');
+INSERT INTO image_data (image_url) VALUES ('assets/products/photo-closet-3.jpeg');
 
---
--- INSERT INTO images (product_id, image_data_id) VALUES (1, 1);
--- INSERT INTO images (product_id, image_data_id) VALUES (1, 2);
--- INSERT INTO images (product_id, image_data_id) VALUES (1, 3);
--- INSERT INTO images (product_id, image_data_id) VALUES (2, 4);
--- INSERT INTO images (product_id, image_data_id) VALUES (2, 5);
--- INSERT INTO images (product_id, image_data_id) VALUES (2, 6);
--- INSERT INTO images (product_id, image_data_id) VALUES (3, 7);
--- INSERT INTO images (product_id, image_data_id) VALUES (3, 8);
--- INSERT INTO images (product_id, image_data_id) VALUES (3, 9);
--- INSERT INTO images (product_id, image_data_id) VALUES (4, 10);
--- INSERT INTO images (product_id, image_data_id) VALUES (4, 11);
--- INSERT INTO images (product_id, image_data_id) VALUES (4, 12);
--- INSERT INTO images (product_id, image_data_id) VALUES (5, 13);
--- INSERT INTO images (product_id, image_data_id) VALUES (5, 14);
--- INSERT INTO images (product_id, image_data_id) VALUES (5, 15);
--- INSERT INTO images (product_id, image_data_id) VALUES (6, 16);
--- INSERT INTO images (product_id, image_data_id) VALUES (6, 17);
--- INSERT INTO images (product_id, image_data_id) VALUES (6, 18);
 
-INSERT INTO products (product_id, product_title, category, measurements, materials, description, price)
+INSERT INTO images (product_id, image_data_id) VALUES (1, 1);
+INSERT INTO images (product_id, image_data_id) VALUES (1, 2);
+INSERT INTO images (product_id, image_data_id) VALUES (1, 3);
+INSERT INTO images (product_id, image_data_id) VALUES (2, 4);
+INSERT INTO images (product_id, image_data_id) VALUES (2, 5);
+INSERT INTO images (product_id, image_data_id) VALUES (2, 6);
+INSERT INTO images (product_id, image_data_id) VALUES (3, 7);
+INSERT INTO images (product_id, image_data_id) VALUES (3, 8);
+INSERT INTO images (product_id, image_data_id) VALUES (3, 9);
+INSERT INTO images (product_id, image_data_id) VALUES (4, 10);
+INSERT INTO images (product_id, image_data_id) VALUES (4, 11);
+INSERT INTO images (product_id, image_data_id) VALUES (4, 12);
+INSERT INTO images (product_id, image_data_id) VALUES (5, 13);
+INSERT INTO images (product_id, image_data_id) VALUES (5, 14);
+INSERT INTO images (product_id, image_data_id) VALUES (5, 15);
+INSERT INTO images (product_id, image_data_id) VALUES (6, 16);
+INSERT INTO images (product_id, image_data_id) VALUES (6, 17);
+INSERT INTO images (product_id, image_data_id) VALUES (6, 18);
+
+INSERT INTO products (product_id, product_title, category, measurements, materials, description, price, delivery_options)
 VALUES
     (1, 'Ovale eikenhouten tafel Knäke', 'Tafels', '220x100x75 cm', 'Eikenhout en staal', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum sagittis nisi, eu consectetur velit. Cras nec nunc eget arcu dictum vulputate. Proin aliquet quam quis magna consequat, ac blandit eros finibus. Nam auctor vestibulum velit, nec mattis enim venenatis et. Duis eget feugiat elit.', 250),
     (2, 'Ribstof vintage stoel Seff', 'Stoelen & Fauteuils', '65x55x75 cm', 'Hout en stof', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum sagittis nisi, eu consectetur velit. Cras nec nunc eget arcu dictum vulputate. Proin aliquet quam quis magna consequat, ac blandit eros finibus. Nam auctor vestibulum velit, nec mattis enim venenatis et. Duis eget feugiat elit.', 199.99),
@@ -63,9 +63,9 @@ VALUES
     (5, 'Licht houten bed van pallets', 'Bedden', '204 x 160 x 80 cm', 'Pallets', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum sagittis nisi, eu consectetur velit. Cras nec nunc eget arcu dictum vulputate. Proin aliquet quam quis magna consequat, ac blandit eros finibus. Nam auctor vestibulum velit, nec mattis enim venenatis et. Duis eget feugiat elit.', 89.99),
     (6, 'Open kast met repurposed steigerhouten schuifdeur', 'Kasten', '80x43x122 cm', 'Hout, steigerhout', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum sagittis nisi, eu consectetur velit. Cras nec nunc eget arcu dictum vulputate. Proin aliquet quam quis magna consequat, ac blandit eros finibus. Nam auctor vestibulum velit, nec mattis enim venenatis et. Duis eget feugiat elit.', 229.99);
 
--- INSERT INTO cart_products (cart_id, product_id) VALUES
---                                                     (@catrina_cart_id, 3),
---                                                     (@catrina_cart_id, 4);
+INSERT INTO cart_products (cart_id, product_id) VALUES
+                                                    (@catrina_cart_id, 3),
+                                                    (@catrina_cart_id, 4);
 
 
 INSERT INTO inquiries (inquiry_type, description, email, username)

@@ -159,7 +159,7 @@ public class UserServiceTest {
         userInputDto.setEmail("linnachterhoek@gmail.com");
         userInputDto.setPassword("Linnisdebom");
 
-        when(userRepositoryMock.findById("linnachterhoek@gmail.com")).thenReturn(Optional.empty());
+        when(userRepositoryMock.findById("linnachterhoek@gmail.com")).thenReturn(null);
 
         boolean result = userService.authenticateUser(userInputDto);
 
