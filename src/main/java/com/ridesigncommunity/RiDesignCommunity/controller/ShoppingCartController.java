@@ -21,21 +21,21 @@ public class ShoppingCartController {
         this.shoppingCartService = shoppingCartService;
     }
 
-    @PostMapping("/user/{username}/products/{productId}/add-to-cart")
-    public ResponseEntity<ShoppingCartDto> addProductToCart(@PathVariable String username, @PathVariable Long productId) {
-        ShoppingCartDto updatedCart = shoppingCartService.addProductToCart(productId, username);
+    @PostMapping("/user/{email}/products/{productId}/add-to-cart")
+    public ResponseEntity<ShoppingCartDto> addProductToCart(@PathVariable String email, @PathVariable Long productId) {
+        ShoppingCartDto updatedCart = shoppingCartService.addProductToCart(productId, email);
         return new ResponseEntity<>(updatedCart, HttpStatus.OK);
     }
 
-    @GetMapping("/user/{username}/products")
-    public ResponseEntity<List<Product>> getProductsInCartByUserId(@PathVariable String username) {
-        List<Product> productsInCart = shoppingCartService.getProductsInCartByUsername(username);
+    @GetMapping("/user/{email}/products")
+    public ResponseEntity<List<Product>> getProductsInCartByEmail(@PathVariable String email) {
+        List<Product> productsInCart = shoppingCartService.getProductsInCartByEmail(email);
         return ResponseEntity.ok().body(productsInCart);
     }
 
-    @DeleteMapping("/user/{userId}/remove-from-cart/{productId}")
-    public ResponseEntity<Void> removeProductFromCart(@PathVariable Long userId, @PathVariable Long productId) {
-        shoppingCartService.removeProductFromCart(userId, productId);
+    @DeleteMapping("/user/{email}/remove-from-cart/{productId}")
+    public ResponseEntity<Void> removeProductFromCart(@PathVariable String email, @PathVariable Long productId) {
+        shoppingCartService.removeProductFromCart(email, productId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

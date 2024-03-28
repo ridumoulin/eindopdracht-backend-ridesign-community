@@ -27,18 +27,18 @@ public class ShoppingCartService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getProductsInCartByUsername(String username) {
-        Optional<ShoppingCart> cartOptional = Optional.ofNullable(shoppingCartRepository.findShoppingCartByUser_Username(username));
+    public List<Product> getProductsInCartByEmail(String email) {
+        Optional<ShoppingCart> cartOptional = Optional.ofNullable(shoppingCartRepository.findShoppingCartByEmail(email));
         if (cartOptional.isPresent()) {
             ShoppingCart cart = cartOptional.get();
             return cart.getProducts();
         } else {
-            throw new IllegalStateException("Shopping cart not found for user with ID: " + username);
+            throw new IllegalStateException("Shopping cart not found for user with email: " + email);
         }
     }
 
-    public ShoppingCartDto addProductToCart(Long productId, String username) {
-        Optional<User> userOptional = userRepository.findById(username);
+    public ShoppingCartDto addProductToCart(Long productId, String email) {
+        Optional<User> userOptional = userRepository.findById(email);
         Optional<Product> productOptional = productRepository.findById(productId);
 
         if (userOptional.isPresent() && productOptional.isPresent()) {
@@ -56,8 +56,8 @@ public class ShoppingCartService {
         }
     }
 
-    public void removeProductFromCart(Long userId, Long productId) {
-        Optional<ShoppingCart> shoppingCartOptional = shoppingCartRepository.findById(userId);
+    public void removeProductFromCart(String email, Long productId) {
+        Optional<ShoppingCart> shoppingCartOptional = shoppingCartRepository.findByEmail(email);
 
         if (shoppingCartOptional.isPresent()) {
             ShoppingCart shoppingCart = shoppingCartOptional.get();

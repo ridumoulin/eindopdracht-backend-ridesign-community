@@ -12,7 +12,7 @@ public class ShoppingCart {
     private Long cartId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "email")
     private User user;
 
     @ManyToMany

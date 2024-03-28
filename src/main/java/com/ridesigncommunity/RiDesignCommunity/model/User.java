@@ -9,8 +9,6 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User {
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long userId;
 
     @Id
     @Column(name = "email", nullable = false)
@@ -31,7 +29,6 @@ public class User {
     @Column(name = "is_ri_designer")
     private boolean isRiDesigner;
 
-
     @OneToOne(mappedBy = "user")
     private ImageData imageData;
 
@@ -50,10 +47,6 @@ public class User {
             orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
-
-//    public Long getUserId() { return userId; }
-//
-//    public void setUserId(Long userId) { this.userId = userId;}
 
     public String getFirstname() {
         return firstname;
