@@ -28,7 +28,7 @@ public class ShoppingCartService {
     }
 
     public List<Product> getProductsInCartByEmail(String email) {
-        Optional<ShoppingCart> cartOptional = Optional.ofNullable(shoppingCartRepository.findShoppingCartByEmail(email));
+        Optional<ShoppingCart> cartOptional = Optional.ofNullable(shoppingCartRepository.findShoppingCartByUser_Email(email));
         if (cartOptional.isPresent()) {
             ShoppingCart cart = cartOptional.get();
             return cart.getProducts();
@@ -57,7 +57,7 @@ public class ShoppingCartService {
     }
 
     public void removeProductFromCart(String email, Long productId) {
-        Optional<ShoppingCart> shoppingCartOptional = shoppingCartRepository.findByEmail(email);
+        Optional<ShoppingCart> shoppingCartOptional = shoppingCartRepository.findByUser_Email(email);
 
         if (shoppingCartOptional.isPresent()) {
             ShoppingCart shoppingCart = shoppingCartOptional.get();

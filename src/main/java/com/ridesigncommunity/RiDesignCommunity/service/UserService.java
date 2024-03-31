@@ -130,7 +130,6 @@ public class UserService {
 
     public UserOutputDto convertToDto(User user) {
         UserOutputDto userDto = new UserOutputDto();
-//        userDto.setUserId(user.getUserId());
         userDto.setEmail(user.getEmail());
         userDto.setFirstname(user.getFirstname());
         userDto.setLastname(user.getLastname());
