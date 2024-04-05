@@ -5,6 +5,7 @@ import com.ridesigncommunity.RiDesignCommunity.dto.AuthenticationResponse;
 import com.ridesigncommunity.RiDesignCommunity.security.CustomUserDetails;
 import com.ridesigncommunity.RiDesignCommunity.security.CustomUserDetailsService;
 import com.ridesigncommunity.RiDesignCommunity.security.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -52,7 +53,7 @@ public class AuthenticationController {
 
         final CustomUserDetails customUserDetails = customUserDetailsService.loadUserByEmail(email);
 
-        final String jwt = jwtUtil.generateToken(customUserDetails);
+        final String jwt = jwtUtil.generateToken(email);
 
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }

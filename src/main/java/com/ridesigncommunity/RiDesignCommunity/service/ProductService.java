@@ -4,6 +4,7 @@ import com.ridesigncommunity.RiDesignCommunity.dto.ProductDto;
 import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.repository.ProductRepository;
 import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
@@ -38,6 +39,7 @@ public class ProductService {
         return productRepository.save(product);
 
     }
+
 
     public List<Product> getAllProducts() {
         List<Product> allProducts = productRepository.findAll();

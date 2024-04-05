@@ -7,6 +7,7 @@ import com.ridesigncommunity.RiDesignCommunity.repository.ProductRepository;
 import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
 import com.ridesigncommunity.RiDesignCommunity.utils.ImageUtil;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -67,6 +68,7 @@ public class ImageDataService {
     }
 
 
+    @Transactional
     public byte[] downloadImage(String username) throws IOException {
         Optional<User> user = userRepository.findById(username);
         User user1;
@@ -81,6 +83,7 @@ public class ImageDataService {
         return new byte[0];
     }
 
+    @Transactional
     public List<byte[]> downloadImages(Long productId) throws IOException {
         Optional<Product> productOptional = productRepository.findById(productId);
         if (productOptional.isPresent()) {

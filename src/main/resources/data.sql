@@ -27,6 +27,32 @@ INSERT INTO delivery_options (product_id, delivery_options) VALUES
                                                                 (5, 'Bezorgen'),
                                                                 (5, 'Ophalen'),
                                                                 (6, 'Ophalen');
+--
+-- INSERT INTO image_data (name, type, image_data)
+-- VALUES ('photo-profile-ri.png', 'image/png', <byte_array_for_image_1>),
+--        ('photo-profile-olaf.jpeg', 'image/jpeg', <byte_array_for_image_2>),
+--        ('photo-profile-catrina.png', 'image/png', <byte_array_for_image_3>);
+
+
+-- INSERT INTO image_data (name, type, image_data)
+-- VALUES ('photo-tables-1.jpeg', 'image/jpeg', <byte_array_for_image_4>),
+--        ('photo-tables-2.jpeg', 'image/jpeg', <byte_array_for_image_5>),
+--        ('photo-tables-3.jpeg', 'image/jpeg', <byte_array_for_image_6>),
+--        ('photo-chair-olaf-1.jpeg', 'image/jpeg', <byte_array_for_image_7>),
+--        ('photo-chair-olaf-2.jpeg', 'image/jpeg', <byte_array_for_image_8>),
+--        ('photo-chair-olaf-3.jpeg', 'image/jpeg', <byte_array_for_image_9>),
+--        ('photo-tables-ri-1.png', 'image/png', <byte_array_for_image_10>),
+--        ('photo-tables-ri-2.png', 'image/png', <byte_array_for_image_11>),
+--        ('photo-tables-ri-3.png', 'image/png', <byte_array_for_image_12>),
+--        ('photo-chair-ri-1.JPG', 'image/jpeg', <byte_array_for_image_13>),
+--        ('photo-chair-ri-2.JPG', 'image/jpeg', <byte_array_for_image_14>),
+--        ('photo-chair-ri-3.JPG', 'image/jpeg', <byte_array_for_image_15>),
+--        ('photo-bed-1.jpeg', 'image/jpeg', <byte_array_for_image_16>),
+--        ('photo-bed-2.jpeg', 'image/jpeg', <byte_array_for_image_17>),
+--        ('photo-bed-3.jpeg', 'image/jpeg', <byte_array_for_image_18>),
+--        ('photo-closet-1.jpeg', 'image/jpeg', <byte_array_for_image_19>),
+--        ('photo-closet-2.jpeg', 'image/jpeg', <byte_array_for_image_20>),
+--        ('photo-closet-3.jpeg', 'image/jpeg', <byte_array_for_image_21>);
 
 
 INSERT INTO shopping_carts (email) VALUES ('catrina.hollander@gmail.com');

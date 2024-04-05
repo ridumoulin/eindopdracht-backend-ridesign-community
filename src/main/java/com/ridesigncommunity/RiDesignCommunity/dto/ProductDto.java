@@ -2,6 +2,7 @@ package com.ridesigncommunity.RiDesignCommunity.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ridesigncommunity.RiDesignCommunity.model.ImageData;
+import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
