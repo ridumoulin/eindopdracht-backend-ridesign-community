@@ -18,7 +18,7 @@ public class ProductDto {
     public String productTitle;
 
     @NotBlank
-    public List<ImageData> images = new ArrayList<>();
+    public List<byte[]> images = new ArrayList<>();
 
     @NotBlank
     public String category;
@@ -94,11 +94,11 @@ public class ProductDto {
         this.deliveryOptions = deliveryOptions;
     }
 
-    public List<ImageData> getImages() {
+    public List<byte[]> getImages() {
         return images;
     }
 
-    public void setImages(List<ImageData> images) {
+    public void setImages(List<byte[]> images) {
         this.images = images;
     }
 

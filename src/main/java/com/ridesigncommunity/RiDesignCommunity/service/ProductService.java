@@ -4,6 +4,7 @@ import com.ridesigncommunity.RiDesignCommunity.dto.ProductDto;
 import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.repository.ProductRepository;
 import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
+import com.ridesigncommunity.RiDesignCommunity.utils.ImageUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -134,7 +135,7 @@ public class ProductService {
         pdto.setCategory(product.getCategory());
         pdto.setProductTitle(product.getProductTitle());
         pdto.setDescription(product.getDescription());
-        pdto.setImages(product.getImages());
+        pdto.setImages(ImageUtil.decompressImageList(product.getImages()));
         pdto.setMaterials(product.getMaterials());
         pdto.setMeasurements(product.getMeasurements());
         pdto.setPrice(product.getPrice());

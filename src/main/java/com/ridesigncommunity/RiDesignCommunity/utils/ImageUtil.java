@@ -1,8 +1,11 @@
 package com.ridesigncommunity.RiDesignCommunity.utils;
 
+import com.ridesigncommunity.RiDesignCommunity.model.ImageData;
 import org.springframework.stereotype.Component;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -47,5 +50,13 @@ public class ImageUtil {
             throw new RuntimeException(e);
         }
         return outputStream.toByteArray();
+    }
+
+    public static List<byte[]> decompressImageList(List<ImageData> imgdata) {
+        List<byte[]> images = new ArrayList<>();
+        for(ImageData img : imgdata){
+            images.add(decompressImage(img.getImageData()));
+        }
+        return images;
     }
 }
