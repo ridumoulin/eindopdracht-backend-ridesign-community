@@ -40,12 +40,17 @@ public class ProductService {
 
     }
 
-
-    public List<Product> getAllProducts() {
+@Transactional
+    public List<ProductDto> getAllProducts() {
         List<Product> allProducts = productRepository.findAll();
-        List<Product> availableProducts = new ArrayList<>();
+        List<ProductDto> availableProducts = new ArrayList<>();
 
-        for (Product product : allProducts) {
+        List<ProductDto> productDtos = new ArrayList<>();
+        for (Product p : allProducts) {
+            productDtos.add(fromModelToProductDto(p));
+        }
+
+        for (ProductDto product : productDtos) {
             if (product.getPrice() > 0) {
                 availableProducts.add(product);
             }
@@ -53,9 +58,14 @@ public class ProductService {
         return availableProducts;
     }
 
-    public List<Product> getProductsByCategory(String category) {
+    public List<ProductDto> getProductsByCategory(String category) {
         String trimmedCategory = category.trim().toLowerCase();
-        return productRepository.findByCategory(trimmedCategory);
+        List<Product> products = productRepository.findByCategory(trimmedCategory);
+        List<ProductDto> productDtos = new ArrayList<>();
+        for (Product p : products) {
+            productDtos.add(fromModelToProductDto(p));
+        }
+        return productDtos;
     }
 
     public List<Product> getProductsByUsername(String username) {
@@ -65,22 +75,32 @@ public class ProductService {
         return productRepository.findProductByUser_Username(username);
     }
 
-    public Product getProductById(Long productId) {
-        return productRepository.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productId));
+    public ProductDto getProductById(Long productId) {
+        Product product = productRepository.getReferenceById(productId);
+        return fromModelToProductDto(product);
     }
 
-    public List<Product> searchProducts(String category, String productTitle) {
+    public List<ProductDto> searchProducts(String category, String productTitle) {
+        List<Product> products = new ArrayList<>();
+        List<ProductDto> productsDto = new ArrayList<>();
         if (category != null && productTitle != null) {
-            return productRepository. findByCategoryAndProductTitleContainingIgnoreCase(category, productTitle);
+            products = productRepository.findByCategoryAndProductTitleContainingIgnoreCase(category, productTitle);
         } else if (category != null) {
-            return productRepository.findByCategoryIgnoreCase(category);
+            products = productRepository.findByCategoryIgnoreCase(category);
         } else if (productTitle != null) {
-            return productRepository.findByProductTitleContainingIgnoreCase(productTitle);
+            products = productRepository.findByProductTitleContainingIgnoreCase(productTitle);
         } else {
             return getAllProducts();
         }
+        if (!products.isEmpty()) {
+            for (Product p : products) {
+                productsDto.add(fromModelToProductDto(p));
+            }
+        }
+        return productsDto;
     }
+
+
 
     private void validateProductDto(ProductDto productDto) {
         if (productDto.getProductTitle() == null || productDto.getProductTitle().isEmpty()) {
@@ -101,11 +121,26 @@ public class ProductService {
     }
 
     public void deleteProduct(Long productId) {
-        Product existingProduct = getProductById(productId);
+        Product existingProduct = productRepository.getReferenceById(productId);
         if (existingProduct == null) {
             throw new EntityNotFoundException("Product not found with ID: " + productId);
         }
         productRepository.deleteById(productId);
     }
+
+    private ProductDto fromModelToProductDto(Product product){
+        ProductDto pdto = new ProductDto();
+        pdto.setProductId(product.getProductId());
+        pdto.setCategory(product.getCategory());
+        pdto.setProductTitle(product.getProductTitle());
+        pdto.setDescription(product.getDescription());
+        pdto.setImages(product.getImages());
+        pdto.setMaterials(product.getMaterials());
+        pdto.setMeasurements(product.getMeasurements());
+        pdto.setPrice(product.getPrice());
+        pdto.setDeliveryOptions(product.getDeliveryOptions());
+        return pdto;
+    }
+
 }
 

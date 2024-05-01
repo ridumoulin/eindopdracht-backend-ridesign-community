@@ -86,8 +86,12 @@ public class ImageLoader implements ApplicationListener<ApplicationReadyEvent> {
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
-//        loadImages();
-        System.out.println("zet deze nog niet aan");
+//        try {
+////            loadImages();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        System.out.println("zet deze nog niet aan");
     }
 
     @Override

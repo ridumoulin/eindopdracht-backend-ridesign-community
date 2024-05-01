@@ -3,11 +3,13 @@ package com.ridesigncommunity.RiDesignCommunity.controller;
 import com.ridesigncommunity.RiDesignCommunity.dto.ProductDto;
 import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.service.ProductService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.Transient;
 
 import java.util.List;
 
@@ -29,8 +31,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts(@RequestParam(required = false) String category) {
-        List<Product> products;
+    public ResponseEntity<List<ProductDto>> getAllProducts(@RequestParam(required = false) String category) {
+        List<ProductDto> products;
         if (category != null) {
             products = productService.getProductsByCategory(category);
         } else {
@@ -40,8 +42,8 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long productId) {
-        Product product = productService.getProductById(productId);
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long productId) {
+        ProductDto product = productService.getProductById(productId);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
@@ -57,9 +59,9 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Product>> searchProducts(@RequestParam(required = false) String category,
+    public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam(required = false) String category,
                                                         @RequestParam(required = false) String productTitle) {
-        List<Product> products = productService.searchProducts(category, productTitle);
+        List<ProductDto> products = productService.searchProducts(category, productTitle);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
