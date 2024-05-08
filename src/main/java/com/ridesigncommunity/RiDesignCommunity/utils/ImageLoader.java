@@ -59,17 +59,17 @@ public class ImageLoader implements ApplicationListener<ApplicationReadyEvent> {
     private void initializeProductIdToImageFiles() {
         productIdToImageFiles.put(1L, new String[]{"photo-tables-1.jpeg","photo-tables-2.jpeg", "photo-tables-3.jpeg"});
         productIdToImageFiles.put(2L, new String[]{"photo-chair-olaf-1.jpeg", "photo-chair-olaf-2.jpeg", "photo-chair-olaf-3.jpeg"});
-        productIdToImageFiles.put(3L, new String[]{"photo-tables-ri-1.png", "photo-tables-ri-2.png", "photo-tables-ri-3.png"});
-//        productIdToImageFiles.put(4L, new String[]{"photo-chair-ri-1.JPG", "photo-chair-ri-2.JPG", "photo-chair-ri-3.JPG"});
-//        productIdToImageFiles.put(5L, new String[]{"photo-bed-1.jpeg", "photo-bed-2.jpeg", "photo-bed-3.jpeg"});
-//        productIdToImageFiles.put(6L, new String[]{"photo-closet-1.jpeg", "photo-closet-2.jpeg", "photo-closet-3.jpeg"});
+        productIdToImageFiles.put(3L, new String[]{"photo-tables-ri-1.jpeg", "photo-tables-ri-2.jpeg", "photo-tables-ri-3.jpeg"});
+        productIdToImageFiles.put(4L, new String[]{"photo-chair-ri-1.jpeg", "photo-chair-ri-2.jpeg", "photo-chair-ri-3.jpeg"});
+        productIdToImageFiles.put(5L, new String[]{"photo-bed-1.jpeg", "photo-bed-2.jpeg", "photo-bed-3.jpeg"});
+        productIdToImageFiles.put(6L, new String[]{"photo-closet-1.jpeg", "photo-closet-2.jpeg", "photo-closet-3.jpeg"});
     }
 
 
     private void initializeUsernameToImageFile() {
-        usernameToImageFile.put("RiDumoulin", "photo-profile-ri.png");
+        usernameToImageFile.put("RiDumoulin", "photo-profile-ri.jpeg");
         usernameToImageFile.put("Brolaf", "photo-profile-olaf.jpeg");
-        usernameToImageFile.put("CHDesigner", "photo-profile-catrina.jpg");
+        usernameToImageFile.put("CHDesigner", "photo-profile-catrina.jpeg");
     }
 
     @Override

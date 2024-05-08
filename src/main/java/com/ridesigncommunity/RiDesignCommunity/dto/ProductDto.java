@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ProductDto {
 
-    @JsonProperty("userId")
+    @JsonProperty("productId")
     public Long productId;
 
     @NotBlank

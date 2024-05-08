@@ -90,6 +90,14 @@ public class User {
         return isRiDesigner;
     }
 
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
     public void setRiDesigner(boolean isRiDesigner) {
         this.isRiDesigner = isRiDesigner;
     }
