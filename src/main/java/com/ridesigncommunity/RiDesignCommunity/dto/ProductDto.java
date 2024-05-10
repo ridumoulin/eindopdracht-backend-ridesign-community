@@ -12,29 +12,31 @@ import java.util.List;
 public class ProductDto {
 
     @JsonProperty("productId")
-    public Long productId;
+    private Long productId;
 
     @NotBlank
-    public String productTitle;
+    private String productTitle;
 
     @NotBlank
-    public List<byte[]> images = new ArrayList<>();
+    private List<byte[]> images = new ArrayList<>();
 
     @NotBlank
-    public String category;
+    private String category;
 
     @NotBlank
-    public String measurements;
+    private String measurements;
 
     @NotBlank
     private String materials;
 
     @NotBlank
     @Size(min=30)
-    public String description;
+    private String description;
 
     @NotBlank
-    public double price;
+    private double price;
+
+    private String username;
 
     public List<String> deliveryOptions = new ArrayList<>();
 
@@ -108,5 +110,13 @@ public class ProductDto {
 
     public void setMaterials(String materials) {
         this.materials = materials;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

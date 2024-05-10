@@ -25,6 +25,8 @@ public class ProductService {
         this.userRepository = userRepository;
     }
 
+
+
     public Product createProduct(ProductDto productDto) {
         validateProductDto(productDto);
 
@@ -36,6 +38,7 @@ public class ProductService {
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
         product.setDeliveryOptions(productDto.getDeliveryOptions());
+
 
         return productRepository.save(product);
 
@@ -76,6 +79,7 @@ public class ProductService {
         return productRepository.findProductByUser_Username(username);
     }
 
+    @Transactional
     public ProductDto getProductById(Long productId) {
         Product product = productRepository.getReferenceById(productId);
         return fromModelToProductDto(product);
@@ -140,6 +144,7 @@ public class ProductService {
         pdto.setMeasurements(product.getMeasurements());
         pdto.setPrice(product.getPrice());
         pdto.setDeliveryOptions(product.getDeliveryOptions());
+        pdto.setUsername(product.getUser().getUsername());
         return pdto;
     }
 

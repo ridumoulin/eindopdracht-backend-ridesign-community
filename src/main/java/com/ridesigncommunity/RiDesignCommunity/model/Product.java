@@ -39,7 +39,7 @@ public class Product {
     private List<String> deliveryOptions = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "products")
+    @JoinColumn(name = "email")
     private User user;
 
     public Long getProductId() {
@@ -121,4 +121,7 @@ public class Product {
     public void setUser(User user) {
         this.user = user;
     }
+
+
 }
+

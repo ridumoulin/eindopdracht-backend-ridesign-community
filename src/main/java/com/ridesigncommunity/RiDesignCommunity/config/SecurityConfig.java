@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests( auth -> auth
                         .requestMatchers(HttpMethod.POST, "/users/authenticate").permitAll()
                         .requestMatchers(HttpMethod.POST, "/products").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/{id}").hasAnyRole("ADMIN","USER")
                         .requestMatchers(HttpMethod.GET, "/inquiries").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/{id}").hasRole("ADMIN")
@@ -66,7 +66,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/shopping-cart/user/{userId}/remove-from-cart/{productId}").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/authenticate").permitAll()
                         .requestMatchers("/authenticated").permitAll()
-                        .requestMatchers("/products/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/products/**").permitAll()
                         .requestMatchers("/profile").authenticated()
                         .requestMatchers("/shopping-cart").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/profile").authenticated()

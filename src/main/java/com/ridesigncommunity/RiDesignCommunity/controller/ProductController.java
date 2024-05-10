@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.Transient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -58,11 +59,21 @@ public class ProductController {
         }
     }
 
+//    @GetMapping("/search")
+//    public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam(required = false) String category,
+//                                                        @RequestParam(required = false) String productTitle) {
+//        List<ProductDto> products = productService.searchProducts(category, productTitle);
+//        return new ResponseEntity<>(products, HttpStatus.OK);
+//    }
+
     @GetMapping("/search")
-    public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam(required = false) String category,
-                                                        @RequestParam(required = false) String productTitle) {
-        List<ProductDto> products = productService.searchProducts(category, productTitle);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam(required = false) String category) {
+        if (category != null && !category.isEmpty()) {
+            List<ProductDto> products = productService.getProductsByCategory(category);
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } else {
+            return ResponseEntity.ok().body(new ArrayList<>());
+        }
     }
 
     @GetMapping("/users/{username}")
