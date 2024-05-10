@@ -1,5 +1,5 @@
 package com.ridesigncommunity.RiDesignCommunity.dto;
-
+import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.model.Authority;
 import com.ridesigncommunity.RiDesignCommunity.model.ImageData;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,6 +25,7 @@ public class UserOutputDto {
 
         private Set<Authority> authorities = new HashSet<>();
 
+        private List<ProductDto> products = new ArrayList<>();
 
     public Long getUserId() {
         return userId;
@@ -96,6 +97,14 @@ public class UserOutputDto {
 
     public void setFavorites(List<Long> favorites) {
         this.favorites = favorites;
+    }
+
+    public List<ProductDto> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<ProductDto> products) {
+        this.products = products;
     }
 
 }

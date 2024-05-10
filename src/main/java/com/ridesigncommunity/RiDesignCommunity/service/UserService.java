@@ -4,25 +4,36 @@ import com.ridesigncommunity.RiDesignCommunity.dto.UserInputDto;
 import com.ridesigncommunity.RiDesignCommunity.dto.UserOutputDto;
 import com.ridesigncommunity.RiDesignCommunity.model.User;
 import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ProductService productService;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ProductService productService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.productService = productService;
     }
 
+    @Transactional
+    public List<UserOutputDto> getAllUsers() {
+        List<User> userList = userRepository.findAll();
+        return userList.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
+    @Transactional
     public void registerUser(UserInputDto userDto) {
         validateUserInput(userDto);
 
@@ -55,11 +66,13 @@ public class UserService {
         return passwordEncoder.matches(userDto.getPassword(), oUser.get().getPassword());
     }
 
+    @Transactional
     public Optional<UserOutputDto> getUserById(String username) {
         Optional<User> userOptional = userRepository.findById(username);
         return userOptional.map(this::convertToDto);
     }
 
+    @Transactional
     public boolean updateUser(String username, UserInputDto userDto) {
         Optional<User> userOptional = userRepository.findById(username);
         if (userOptional.isEmpty()) {
@@ -76,8 +89,9 @@ public class UserService {
         return true;
     }
 
+    @Transactional
     public boolean deleteUser(String username) {
-        Optional<User> userOptional = userRepository.findById(username);
+        Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
             return false;
         }
@@ -96,8 +110,9 @@ public class UserService {
         }
     }
 
+    @Transactional
     public boolean addFavorite(String username, Long productId) {
-        Optional<User> userOptional = userRepository.findById(username);
+        Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
             return false;
         }
@@ -112,6 +127,7 @@ public class UserService {
         return true;
     }
 
+    @Transactional
     public boolean removeFavorite(String username, Long productId) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
@@ -135,9 +151,15 @@ public class UserService {
         userDto.setLastname(user.getLastname());
         userDto.setUsername(user.getUsername());
         userDto.setRiDesigner(user.isRiDesigner());
+        userDto.setImageData(user.getImageData());
+        userDto.setAuthorities(user.getAuthorities());
+        userDto.setFavorites(user.getFavorites());
+        userDto.setProducts(productService.productDtoList(user.getProducts()));
 
         return userDto;
     }
+
+
 
     public void validateUserInput(UserInputDto userDto) {
         if (userDto.getUsername() == null || userDto.getUsername().isEmpty()) {

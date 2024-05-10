@@ -39,10 +39,6 @@ public class UserInputDto {
 
     private List<Long> favorites = new ArrayList<>();
 
-    public ImageData imageData;
-
-    public Set<Authority> authorities = new HashSet<>();
-
     public String getEmail() { return email; }
 
     public String getPassword() { return password; }
@@ -76,14 +72,6 @@ public class UserInputDto {
     public void setRiDesigner(boolean riDesigner) { isRiDesigner = riDesigner; }
 
 
-    public ImageData getImageData() {
-        return imageData;
-    }
-
-    public void setImageData(ImageData imageData) {
-        this.imageData = imageData;
-    }
-
     public Long getUserId() {
         return userId;
     }
@@ -91,11 +79,4 @@ public class UserInputDto {
         this.userId = userId;
     }
 
-    public Set<Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
-    }
 }

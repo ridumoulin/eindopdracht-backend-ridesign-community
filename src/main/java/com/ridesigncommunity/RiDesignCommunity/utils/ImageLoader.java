@@ -2,8 +2,10 @@ package com.ridesigncommunity.RiDesignCommunity.utils;
 
 import com.ridesigncommunity.RiDesignCommunity.model.ImageData;
 import com.ridesigncommunity.RiDesignCommunity.model.Product;
+import com.ridesigncommunity.RiDesignCommunity.model.User;
 import com.ridesigncommunity.RiDesignCommunity.repository.ImageDataRepository;
 import com.ridesigncommunity.RiDesignCommunity.repository.ProductRepository;
+import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
 import com.ridesigncommunity.RiDesignCommunity.service.ImageDataService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class ImageLoader implements ApplicationListener<ApplicationReadyEvent> {
@@ -28,11 +31,13 @@ public class ImageLoader implements ApplicationListener<ApplicationReadyEvent> {
     private final ImageDataRepository imgdataRepos;
     private final Map<Long, String[]> productIdToImageFiles = new HashMap<>();
     private final Map<String, String> usernameToImageFile = new HashMap<>();
+    private final UserRepository userRepository;
 
     @Autowired
-    public ImageLoader(ImageDataService imageDataService, ProductRepository productRepository, ImageDataRepository imgdataRepos) {
+    public ImageLoader(ImageDataService imageDataService, ProductRepository productRepository, UserRepository userRepository, ImageDataRepository imgdataRepos) {
         this.imageDataService = imageDataService;
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
         this.imgdataRepos = imgdataRepos;
         initializeProductIdToImageFiles();
         initializeUsernameToImageFile();
@@ -56,6 +61,27 @@ public class ImageLoader implements ApplicationListener<ApplicationReadyEvent> {
         }
     }
 
+    public void loadImage() throws IOException {
+        for (Map.Entry<String, String> entry : usernameToImageFile.entrySet()) {
+            String username = entry.getKey();
+            String imageFile = entry.getValue();
+
+            Optional<User> userOptional = userRepository.findByEmail(username);
+            if (userOptional.isEmpty()) {
+                continue;
+            }
+
+            User user = userOptional.get();
+
+            ImageData imgdata = new ImageData();
+            imgdata.setImageData(ImageUtil.compressImage(Files.readAllBytes(Paths.get("src/main/resources/images/users/" + imageFile))));
+            imgdata.setType("image/" + imageFile.substring(imageFile.lastIndexOf(".")));
+            imgdata.setUser(user);
+            imgdata.setName(imageFile);
+            imgdataRepos.save(imgdata);
+        }
+    }
+
     private void initializeProductIdToImageFiles() {
         productIdToImageFiles.put(1L, new String[]{"photo-tables-1.jpeg","photo-tables-2.jpeg", "photo-tables-3.jpeg"});
         productIdToImageFiles.put(2L, new String[]{"photo-chair-olaf-1.jpeg", "photo-chair-olaf-2.jpeg", "photo-chair-olaf-3.jpeg"});
@@ -67,15 +93,16 @@ public class ImageLoader implements ApplicationListener<ApplicationReadyEvent> {
 
 
     private void initializeUsernameToImageFile() {
-        usernameToImageFile.put("RiDumoulin", "photo-profile-ri.jpeg");
-        usernameToImageFile.put("Brolaf", "photo-profile-olaf.jpeg");
-        usernameToImageFile.put("CHDesigner", "photo-profile-catrina.jpeg");
+        usernameToImageFile.put("riannedumoulin@gmail.com", "photo-profile-ri.jpeg");
+        usernameToImageFile.put("olaf.holleman@outlook.com", "photo-profile-olaf.jpeg");
+        usernameToImageFile.put("catrina.hollander@gmail.com", "photo-profile-catrina.jpeg");
     }
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         try {
             loadImages();
+            loadImage();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

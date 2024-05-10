@@ -17,7 +17,18 @@ VALUES
     (5, 'Licht houten bed van pallets', 'Bedden', '204 x 160 x 80 cm', 'Pallets', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum sagittis nisi, eu consectetur velit. Cras nec nunc eget arcu dictum vulputate. Proin aliquet quam quis magna consequat, ac blandit eros finibus. Nam auctor vestibulum velit, nec mattis enim venenatis et. Duis eget feugiat elit.', 89.99, 'catrina.hollander@gmail.com'),
     (6, 'Open kast met repurposed steigerhouten schuifdeur', 'Kasten', '80x43x122 cm', 'Hout, steigerhout', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum sagittis nisi, eu consectetur velit. Cras nec nunc eget arcu dictum vulputate. Proin aliquet quam quis magna consequat, ac blandit eros finibus. Nam auctor vestibulum velit, nec mattis enim venenatis et. Duis eget feugiat elit.', 229.99, 'catrina.hollander@gmail.com');
 
+UPDATE products
+SET email = 'olaf.holleman@outlook.com'
+WHERE product_id IN (1, 2);
 
+UPDATE products
+SET email = 'riannedumoulin@gmail.com'
+WHERE product_id IN (3, 4);
+
+
+UPDATE products
+SET email = 'catrina.hollander@gmail.com'
+WHERE product_id IN (5, 6);
 
 INSERT INTO delivery_options (product_id, delivery_options) VALUES
                                                                 (1, 'Bezorgen'),

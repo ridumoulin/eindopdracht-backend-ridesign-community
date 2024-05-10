@@ -12,6 +12,7 @@ import javax.persistence.EntityNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class ProductService {
@@ -24,7 +25,6 @@ public class ProductService {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
     }
-
 
 
     public Product createProduct(ProductDto productDto) {
@@ -44,7 +44,7 @@ public class ProductService {
 
     }
 
-@Transactional
+    @Transactional
     public List<ProductDto> getAllProducts() {
         List<Product> allProducts = productRepository.findAll();
         List<ProductDto> availableProducts = new ArrayList<>();
@@ -62,9 +62,10 @@ public class ProductService {
         return availableProducts;
     }
 
+    @Transactional
     public List<ProductDto> getProductsByCategory(String category) {
-        String trimmedCategory = category.trim().toLowerCase();
-        List<Product> products = productRepository.findByCategory(trimmedCategory);
+        String trimmedCategory = category.trim();
+        List<Product> products = productRepository.findByCategoryIgnoreCase(trimmedCategory);
         List<ProductDto> productDtos = new ArrayList<>();
         for (Product p : products) {
             productDtos.add(fromModelToProductDto(p));
@@ -106,7 +107,6 @@ public class ProductService {
     }
 
 
-
     private void validateProductDto(ProductDto productDto) {
         if (productDto.getProductTitle() == null || productDto.getProductTitle().isEmpty()) {
             throw new IllegalArgumentException("Product title must not be empty");
@@ -133,7 +133,7 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
-    private ProductDto fromModelToProductDto(Product product){
+    private ProductDto fromModelToProductDto(Product product) {
         ProductDto pdto = new ProductDto();
         pdto.setProductId(product.getProductId());
         pdto.setCategory(product.getCategory());
@@ -148,5 +148,12 @@ public class ProductService {
         return pdto;
     }
 
+    public List<ProductDto> productDtoList(List<Product> productList) {
+        List<ProductDto> productDtoList = new ArrayList<>();
+        productList.forEach(product -> productDtoList.add(fromModelToProductDto(product)));
+        return productDtoList;
+    }
 }
+
+
 
