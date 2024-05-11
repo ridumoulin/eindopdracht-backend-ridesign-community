@@ -4,6 +4,7 @@ import com.ridesigncommunity.RiDesignCommunity.dto.InquiryDto;
 import com.ridesigncommunity.RiDesignCommunity.model.Inquiry;
 import com.ridesigncommunity.RiDesignCommunity.repository.InquiryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,14 +30,20 @@ public class InquiryService {
     }
 
     public Inquiry createInquiry(InquiryDto inquiryDto) {
-        validateInquiryDto(inquiryDto);
+        try {
+            validateInquiryDto(inquiryDto);
 
-        Inquiry inquiry = new Inquiry();
-        inquiry.setInquiryType(inquiryDto.getInquiryType());
-        inquiry.setDescription(inquiryDto.getDescription());
-        inquiry.setEmail(inquiryDto.getEmail());
+            Inquiry inquiry = new Inquiry();
+            inquiry.setInquiryType(inquiryDto.getInquiryType());
+            inquiry.setDescription(inquiryDto.getDescription());
+            inquiry.setEmail(inquiryDto.getEmail());
 
-        return inquiryRepository.save(inquiry);
+            return inquiryRepository.save(inquiry);
+        } catch (DataAccessException ex) {
+            throw new RuntimeException("Failed to create inquiry: " + ex.getMessage(), ex);
+        } catch (Exception ex) {
+            throw new RuntimeException("An unexpected error occurred: " + ex.getMessage(), ex);
+        }
     }
 
     private void validateInquiryDto(InquiryDto inquiryDto) {

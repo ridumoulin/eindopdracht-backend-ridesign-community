@@ -59,12 +59,6 @@ public class ProductController {
         }
     }
 
-//    @GetMapping("/search")
-//    public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam(required = false) String category,
-//                                                        @RequestParam(required = false) String productTitle) {
-//        List<ProductDto> products = productService.searchProducts(category, productTitle);
-//        return new ResponseEntity<>(products, HttpStatus.OK);
-//    }
 
     @GetMapping("/search")
     public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam(required = false) String category) {

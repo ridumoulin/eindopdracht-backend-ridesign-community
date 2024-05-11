@@ -18,14 +18,6 @@ public class InquiryDto {
     @Email
     public String email;
 
-    public Long getInquiryrId() {
-        return inquiryId;
-    }
-
-    public void setInquiryrId(Long inquiryrId) {
-        this.inquiryId = inquiryrId;
-    }
-
     public Long getInquiryId() {
         return inquiryId;
     }
