@@ -1,17 +1,21 @@
 package com.ridesigncommunity.RiDesignCommunity.service;
 
+import com.ridesigncommunity.RiDesignCommunity.dto.ProductDto;
 import com.ridesigncommunity.RiDesignCommunity.dto.ShoppingCartDto;
 import com.ridesigncommunity.RiDesignCommunity.model.Product;
+import com.ridesigncommunity.RiDesignCommunity.service.ProductService;
 import com.ridesigncommunity.RiDesignCommunity.model.ShoppingCart;
 import com.ridesigncommunity.RiDesignCommunity.model.User;
 import com.ridesigncommunity.RiDesignCommunity.repository.ProductRepository;
 import com.ridesigncommunity.RiDesignCommunity.repository.ShoppingCartRepository;
 import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
+import com.ridesigncommunity.RiDesignCommunity.utils.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ShoppingCartService {
@@ -27,11 +31,11 @@ public class ShoppingCartService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getProductsInCartByEmail(String email) {
+    public ShoppingCartDto getProductsInCartByEmail(String email) {
         Optional<ShoppingCart> cartOptional = Optional.ofNullable(shoppingCartRepository.findShoppingCartByUser_Email(email));
         if (cartOptional.isPresent()) {
             ShoppingCart cart = cartOptional.get();
-            return cart.getProducts();
+            return mapToDto(cart);
         } else {
             throw new IllegalStateException("Shopping cart not found for user with email: " + email);
         }
@@ -84,7 +88,21 @@ public class ShoppingCartService {
         ShoppingCartDto dto = new ShoppingCartDto();
         dto.setCartId(shoppingCart.getCartId());
         dto.setUserId(shoppingCart.getUser());
-        dto.setProducts(shoppingCart.getProducts());
+
+        List<ProductDto> productDtos = shoppingCart.getProducts().stream()
+                .map(product -> {
+                    ProductDto productDto = new ProductDto();
+                    productDto.setProductId(product.getProductId());
+                    productDto.setCategory(product.getCategory());
+                    productDto.setProductTitle(product.getProductTitle());
+                    productDto.setImages(ImageUtil.decompressImageList(product.getImages()));
+                    productDto.setPrice(product.getPrice());
+                    productDto.setUsername(product.getUser().getUsername());
+                    return productDto;
+                })
+                .collect(Collectors.toList());
+
+        dto.setProducts(productDtos);
         return dto;
     }
 }

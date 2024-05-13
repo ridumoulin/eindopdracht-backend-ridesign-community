@@ -1,5 +1,6 @@
 package com.ridesigncommunity.RiDesignCommunity.controller;
 
+import com.ridesigncommunity.RiDesignCommunity.dto.ProductDto;
 import com.ridesigncommunity.RiDesignCommunity.dto.ShoppingCartDto;
 import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.service.ShoppingCartService;
@@ -28,9 +29,10 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/user/{email}/products")
-    public ResponseEntity<List<Product>> getProductsInCartByEmail(@PathVariable String email) {
-        List<Product> productsInCart = shoppingCartService.getProductsInCartByEmail(email);
-        return ResponseEntity.ok().body(productsInCart);
+    public ResponseEntity<ShoppingCartDto> getProductsInCartByEmail(@PathVariable String email) {
+        ShoppingCartDto cartDto = shoppingCartService.getProductsInCartByEmail(email);
+        cartDto.setEmail(email);
+        return ResponseEntity.ok().body(cartDto);
     }
 
     @DeleteMapping("/user/{email}/remove-from-cart/{productId}")

@@ -7,6 +7,7 @@ import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
 import com.ridesigncommunity.RiDesignCommunity.utils.ImageUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 
@@ -27,7 +28,7 @@ public class ProductService {
     }
 
 
-    public Product createProduct(ProductDto productDto) {
+    public ProductDto createProduct(ProductDto productDto) {
         validateProductDto(productDto);
 
         Product product = new Product();
@@ -38,9 +39,9 @@ public class ProductService {
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
         product.setDeliveryOptions(productDto.getDeliveryOptions());
+        product.setUser(userRepository.findByUsername(productDto.getUsername()).orElseThrow(()->new UsernameNotFoundException(productDto.getUsername())));
 
-
-        return productRepository.save(product);
+        return fromModelToProductDto(productRepository.save(product));
 
     }
 
@@ -82,7 +83,7 @@ public class ProductService {
 
     @Transactional
     public ProductDto getProductById(Long productId) {
-        Product product = productRepository.getReferenceById(productId);
+        Product product = productRepository.getById(productId);
         return fromModelToProductDto(product);
     }
 

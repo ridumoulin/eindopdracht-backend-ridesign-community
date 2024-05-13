@@ -16,7 +16,7 @@ public class ShoppingCartDto {
 
     @NotNull
     @Size(max = 5)
-    public List<Product> products;
+    public List<ProductDto> products;
 
     public Long getCartId() {
         return cartId;
@@ -34,11 +34,14 @@ public class ShoppingCartDto {
         this.userId = userId;
     }
 
-    public List<Product> getProducts() {
+    public List<ProductDto> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(List<ProductDto> products) {
         this.products = products;
+    }
+
+    public void setEmail(String email) {
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/inquiries")
@@ -27,15 +28,18 @@ public class InquiryController {
     }
 
     @PostMapping
-    public ResponseEntity<Inquiry> createInquiry(@RequestBody InquiryDto inquiryDto) {
-        Inquiry createdInquiry = inquiryService.createInquiry(inquiryDto);
-        return new ResponseEntity<>(createdInquiry, HttpStatus.CREATED);
+    public ResponseEntity<InquiryDto> createInquiry(@RequestBody InquiryDto inquiryDto) {
+        InquiryDto createdInquiryDto = inquiryService.createInquiry(inquiryDto);
+        return new ResponseEntity<>(createdInquiryDto, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Inquiry>> getAllInquiries() {
+    public ResponseEntity<List<InquiryDto>> getAllInquiries() {
         List<Inquiry> inquiries = inquiryService.getAllInquiries();
-        return new ResponseEntity<>(inquiries, HttpStatus.OK);
+        List<InquiryDto> inquiryDtos = inquiries.stream()
+                .map(inquiryService::mapToDto)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(inquiryDtos, HttpStatus.OK);
     }
 
     @DeleteMapping("/{inquiryId}")

@@ -29,7 +29,7 @@ public class InquiryService {
         this.inquiryRepository = inquiryRepository;
     }
 
-    public Inquiry createInquiry(InquiryDto inquiryDto) {
+    public InquiryDto createInquiry(InquiryDto inquiryDto) {
         try {
             validateInquiryDto(inquiryDto);
 
@@ -38,12 +38,23 @@ public class InquiryService {
             inquiry.setDescription(inquiryDto.getDescription());
             inquiry.setEmail(inquiryDto.getEmail());
 
-            return inquiryRepository.save(inquiry);
+            Inquiry savedInquiry = inquiryRepository.save(inquiry);
+
+            return mapToDto(savedInquiry);
         } catch (DataAccessException ex) {
             throw new RuntimeException("Failed to create inquiry: " + ex.getMessage(), ex);
         } catch (Exception ex) {
             throw new RuntimeException("An unexpected error occurred: " + ex.getMessage(), ex);
         }
+    }
+
+    public InquiryDto mapToDto(Inquiry inquiry) {
+        InquiryDto dto = new InquiryDto();
+        dto.setInquiryId(inquiry.getInquiryId());
+        dto.setInquiryType(inquiry.getInquiryType());
+        dto.setDescription(inquiry.getDescription());
+        dto.setEmail(inquiry.getEmail());
+        return dto;
     }
 
     private void validateInquiryDto(InquiryDto inquiryDto) {
@@ -59,7 +70,6 @@ public class InquiryService {
     }
 
     public List<Inquiry> getAllInquiries() {
-        // Get the currently authenticated user's authorities
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
