@@ -12,7 +12,7 @@ public class ShoppingCartDto {
     public Long cartId;
 
     @NotNull
-    public User userId;
+    public String userId;
 
     @NotNull
     @Size(max = 5)
@@ -26,11 +26,11 @@ public class ShoppingCartDto {
         this.cartId = cartId;
     }
 
-    public User getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(User userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

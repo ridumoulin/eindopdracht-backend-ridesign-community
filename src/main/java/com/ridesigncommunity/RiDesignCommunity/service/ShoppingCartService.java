@@ -10,9 +10,11 @@ import com.ridesigncommunity.RiDesignCommunity.repository.ProductRepository;
 import com.ridesigncommunity.RiDesignCommunity.repository.ShoppingCartRepository;
 import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
 import com.ridesigncommunity.RiDesignCommunity.utils.ImageUtil;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.beans.Transient;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,6 +33,7 @@ public class ShoppingCartService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public ShoppingCartDto getProductsInCartByEmail(String email) {
         Optional<ShoppingCart> cartOptional = Optional.ofNullable(shoppingCartRepository.findShoppingCartByUser_Email(email));
         if (cartOptional.isPresent()) {
@@ -41,6 +44,7 @@ public class ShoppingCartService {
         }
     }
 
+    @Transactional
     public ShoppingCartDto addProductToCart(Long productId, String email) {
         Optional<User> userOptional = userRepository.findById(email);
         Optional<Product> productOptional = productRepository.findById(productId);
@@ -87,7 +91,7 @@ public class ShoppingCartService {
     private ShoppingCartDto mapToDto(ShoppingCart shoppingCart) {
         ShoppingCartDto dto = new ShoppingCartDto();
         dto.setCartId(shoppingCart.getCartId());
-        dto.setUserId(shoppingCart.getUser());
+        dto.setUserId(shoppingCart.getUser().getEmail());
 
         List<ProductDto> productDtos = shoppingCart.getProducts().stream()
                 .map(product -> {
@@ -98,6 +102,7 @@ public class ShoppingCartService {
                     productDto.setImages(ImageUtil.decompressImageList(product.getImages()));
                     productDto.setPrice(product.getPrice());
                     productDto.setUsername(product.getUser().getUsername());
+                    productDto.setDeliveryOptions(product.getDeliveryOptions());
                     return productDto;
                 })
                 .collect(Collectors.toList());
