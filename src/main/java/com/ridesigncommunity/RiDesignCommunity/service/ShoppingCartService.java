@@ -64,6 +64,7 @@ public class ShoppingCartService {
         }
     }
 
+    @Transactional
     public void removeProductFromCart(String email, Long productId) {
         Optional<ShoppingCart> shoppingCartOptional = shoppingCartRepository.findByUser_Email(email);
 
