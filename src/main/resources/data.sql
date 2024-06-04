@@ -1,7 +1,7 @@
 INSERT INTO users (email, password, first_name, last_name, user_name, is_ri_designer)
 VALUES ('riannedumoulin@gmail.com', '$2a$12$hu9MMAWl2ve/UBbxY0ZYde6soxwCx9ZRGvWukK/XVgyk9z17X0miy', 'Rianne', 'van der Molen', 'RiDumoulin', true),
-       ('olaf.holleman@outlook.com', '$2a$10$PWhlye6v88xBXenDW4W2U.qabxAWP1WbEte4aDXhQbFzJc3hV9fAC', 'Olaf', 'Holleman', 'Brolaf', true),
-       ('catrina.hollander@gmail.com', '$2a$10$7uWUGqzHn2rs8N0LdVNN3O.hRE6uS5.jCtT6gKd1T2yCTIvyY3/YG', 'Catrina', 'Hollander', 'CHDesigner', true);
+       ('olaf.holleman@outlook.com', '$2a$12$hu9MMAWl2ve/UBbxY0ZYde6soxwCx9ZRGvWukK/XVgyk9z17X0miy', 'Olaf', 'Holleman', 'Brolaf', true),
+       ('catrina.hollander@gmail.com', '$2a$12$hu9MMAWl2ve/UBbxY0ZYde6soxwCx9ZRGvWukK/XVgyk9z17X0miy', 'Catrina', 'Hollander', 'CHDesigner', true);
 
 INSERT INTO authorities (email, authority)
 VALUES ('riannedumoulin@gmail.com', 'ROLE_ADMIN'),
