@@ -133,7 +133,7 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
-    private ProductDto fromModelToProductDto(Product product) {
+    public ProductDto fromModelToProductDto(Product product) {
         ProductDto pdto = new ProductDto();
         pdto.setProductId(product.getProductId());
         pdto.setCategory(product.getCategory());
@@ -153,6 +153,8 @@ public class ProductService {
         productList.forEach(product -> productDtoList.add(fromModelToProductDto(product)));
         return productDtoList;
     }
+
+
 }
 
 

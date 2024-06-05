@@ -42,6 +42,19 @@ public class Product {
     @JoinColumn(name = "email")
     private User user;
 
+    public Product(Long productId, String productTitle, List<ImageData> images, String category, String measurements, String materials, String description, double price, List<String> deliveryOptions, User user) {
+        this.productId = productId;
+        this.productTitle = productTitle;
+        this.images = images;
+        this.category = category;
+        this.measurements = measurements;
+        this.materials = materials;
+        this.description = description;
+        this.price = price;
+        this.deliveryOptions = deliveryOptions;
+        this.user = user;
+    }
+
     public Long getProductId() {
         return productId;
     }
