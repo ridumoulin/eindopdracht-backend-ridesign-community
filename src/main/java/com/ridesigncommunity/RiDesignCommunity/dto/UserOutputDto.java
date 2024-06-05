@@ -21,7 +21,9 @@ public class UserOutputDto {
         private boolean isRiDesigner;
 
         private List<Long> favorites = new ArrayList<>();
-        private ImageData imageData;
+//        private ImageData imageData;
+
+        private byte[] imageData;
 
         private Set<Authority> authorities = new HashSet<>();
 
@@ -75,11 +77,19 @@ public class UserOutputDto {
         isRiDesigner = riDesigner;
     }
 
-    public ImageData getImageData() {
+//    public ImageData getImageData() {
+//        return imageData;
+//    }
+//
+//    public void setImageData(ImageData imageData) {
+//        this.imageData = imageData;
+//    }
+
+    public byte[] getImageData() {
         return imageData;
     }
 
-    public void setImageData(ImageData imageData) {
+    public void setImageData(byte[] imageData) {
         this.imageData = imageData;
     }
 

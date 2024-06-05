@@ -42,7 +42,6 @@ public class ProductService {
         product.setUser(userRepository.findByUsername(productDto.getUsername()).orElseThrow(()->new UsernameNotFoundException(productDto.getUsername())));
 
         return fromModelToProductDto(productRepository.save(product));
-
     }
 
     @Transactional

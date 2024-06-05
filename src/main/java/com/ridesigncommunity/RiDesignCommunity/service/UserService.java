@@ -2,13 +2,16 @@ package com.ridesigncommunity.RiDesignCommunity.service;
 
 import com.ridesigncommunity.RiDesignCommunity.dto.UserInputDto;
 import com.ridesigncommunity.RiDesignCommunity.dto.UserOutputDto;
+import com.ridesigncommunity.RiDesignCommunity.model.ImageData;
 import com.ridesigncommunity.RiDesignCommunity.model.User;
 import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
+import com.ridesigncommunity.RiDesignCommunity.utils.ImageUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -123,8 +126,9 @@ public class UserService {
             favorites.add(productId);
             user.setFavorites(favorites);
             userRepository.save(user);
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Transactional
@@ -151,14 +155,15 @@ public class UserService {
         userDto.setLastname(user.getLastname());
         userDto.setUsername(user.getUsername());
         userDto.setRiDesigner(user.isRiDesigner());
-        userDto.setImageData(user.getImageData());
+//        userDto.setImageData(user.getImageData());
+        userDto.setImageData(ImageUtil.decompressImage(user.getImageData()));
+
         userDto.setAuthorities(user.getAuthorities());
         userDto.setFavorites(user.getFavorites());
         userDto.setProducts(productService.productDtoList(user.getProducts()));
 
         return userDto;
     }
-
 
 
     public void validateUserInput(UserInputDto userDto) {
