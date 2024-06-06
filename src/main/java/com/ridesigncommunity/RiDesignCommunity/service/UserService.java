@@ -76,18 +76,14 @@ public class UserService {
     }
 
     @Transactional
-    public boolean updateUser(String username, UserInputDto userDto) {
-        Optional<User> userOptional = userRepository.findById(username);
+    public boolean updateUsername(String email, String newUsername) {
+        Optional<User> userOptional = userRepository.findById(email);
         if (userOptional.isEmpty()) {
             return false;
         }
 
         User user = userOptional.get();
-        user.setFirstname(userDto.getFirstname());
-        user.setLastname(userDto.getLastname());
-        user.setUsername(userDto.getUsername());
-        user.setRiDesigner(userDto.isRiDesigner());
-
+        user.setUsername(newUsername);
         userRepository.save(user);
         return true;
     }
@@ -155,8 +151,7 @@ public class UserService {
         userDto.setLastname(user.getLastname());
         userDto.setUsername(user.getUsername());
         userDto.setRiDesigner(user.isRiDesigner());
-//        userDto.setImageData(user.getImageData());
-        userDto.setImageData(ImageUtil.decompressImage(user.getImageData()));
+        userDto.setImageData(ImageUtil.decompressImage(user.getImageData().getImageData()));
 
         userDto.setAuthorities(user.getAuthorities());
         userDto.setFavorites(user.getFavorites());

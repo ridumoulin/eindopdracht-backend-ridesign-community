@@ -48,8 +48,15 @@ public class User {
             fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
 
+
     public User(String username) {
+
         this.username = username;
+
+    }
+
+    public User() {
+
     }
 
     public String getFirstname() {

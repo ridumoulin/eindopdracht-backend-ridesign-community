@@ -21,7 +21,6 @@ public class UserOutputDto {
         private boolean isRiDesigner;
 
         private List<Long> favorites = new ArrayList<>();
-//        private ImageData imageData;
 
         private byte[] imageData;
 

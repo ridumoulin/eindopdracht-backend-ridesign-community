@@ -2,6 +2,7 @@ package com.ridesigncommunity.RiDesignCommunity.controller;
 
 import com.ridesigncommunity.RiDesignCommunity.dto.UserInputDto;
 import com.ridesigncommunity.RiDesignCommunity.dto.UserOutputDto;
+import com.ridesigncommunity.RiDesignCommunity.dto.UsernameUpdateDto;
 import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,14 +59,14 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{username}")
-    public ResponseEntity<String> updateUser(@PathVariable String username, @Validated @RequestBody UserInputDto userDto) {
-        boolean updateSuccess = userService.updateUser(username, userDto);
+    @PutMapping("/{email}")
+    public ResponseEntity<String> updateUsername(@PathVariable String email, @Validated @RequestBody UsernameUpdateDto usernameUpdateDto) {
+        boolean updateSuccess = userService.updateUsername(email, usernameUpdateDto.getUsername());
         if (!updateSuccess) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
 
-        return ResponseEntity.ok("User profile updated successfully.");
+        return ResponseEntity.ok("Username updated successfully.");
     }
 
     @DeleteMapping("/{username}")
