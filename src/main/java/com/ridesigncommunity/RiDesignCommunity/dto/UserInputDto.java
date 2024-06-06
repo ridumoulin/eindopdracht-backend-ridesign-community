@@ -39,6 +39,20 @@ public class UserInputDto {
 
     private List<Long> favorites = new ArrayList<>();
 
+    public UserInputDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public UserInputDto(String email, String password, String firstname, String lastname, String username, boolean isRiDesigner) {
+        this.email = email;
+        this.password = password;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.username = username;
+        this.isRiDesigner = isRiDesigner;
+    }
+
     public String getEmail() { return email; }
 
     public String getPassword() { return password; }
