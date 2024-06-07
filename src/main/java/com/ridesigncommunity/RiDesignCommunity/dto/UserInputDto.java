@@ -15,9 +15,6 @@ import java.util.Set;
 
 public class UserInputDto {
 
-    @JsonProperty("userId")
-    public Long userId;
-
     @NotBlank(message = "E-mail is required")
     @Email
     public String email;
@@ -43,6 +40,8 @@ public class UserInputDto {
         this.email = email;
         this.password = password;
     }
+
+    public UserInputDto(){};
 
     public UserInputDto(String email, String password, String firstname, String lastname, String username, boolean isRiDesigner) {
         this.email = email;
@@ -84,13 +83,5 @@ public class UserInputDto {
     public void setUsername(String username) { this.username = username; }
 
     public void setRiDesigner(boolean riDesigner) { isRiDesigner = riDesigner; }
-
-
-    public Long getUserId() {
-        return userId;
-    }
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
 }

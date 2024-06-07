@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,18 +47,21 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Email address is already registered.");
         }
-
-        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userService.registerUser(userDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully.");
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{email}")
+                .buildAndExpand(userDto.getEmail())
+                .toUri();
+
+        return ResponseEntity.created(uri).body("User registered successfully.");
     }
 
     @GetMapping("/{username}")
     public ResponseEntity<UserOutputDto> getUserById(@PathVariable String username) {
-        Optional<UserOutputDto> userDtoOptional = userService.getUserById(username);
-        return userDtoOptional.map(dto -> ResponseEntity.ok().body(dto))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        UserOutputDto userDtoOptional = userService.getUserById(username);
+    return ResponseEntity.ok(userDtoOptional);
     }
 
     @PutMapping("/{email}")

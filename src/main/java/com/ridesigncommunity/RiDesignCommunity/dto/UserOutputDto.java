@@ -11,9 +11,6 @@ import java.util.Set;
 
 public class UserOutputDto {
 
-        @JsonProperty("userId")
-        private Long userId;
-
         private String email;
         private String firstname;
         private String lastname;
@@ -27,14 +24,6 @@ public class UserOutputDto {
         private Set<Authority> authorities = new HashSet<>();
 
         private List<ProductDto> products = new ArrayList<>();
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     public String getEmail() {
         return email;

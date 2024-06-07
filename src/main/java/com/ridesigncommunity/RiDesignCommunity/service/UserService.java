@@ -2,6 +2,7 @@ package com.ridesigncommunity.RiDesignCommunity.service;
 
 import com.ridesigncommunity.RiDesignCommunity.dto.UserInputDto;
 import com.ridesigncommunity.RiDesignCommunity.dto.UserOutputDto;
+import com.ridesigncommunity.RiDesignCommunity.model.Authority;
 import com.ridesigncommunity.RiDesignCommunity.model.ImageData;
 import com.ridesigncommunity.RiDesignCommunity.model.User;
 import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
@@ -11,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,6 +51,15 @@ public class UserService {
         user.setUsername(userDto.getUsername());
         user.setRiDesigner(userDto.isRiDesigner());
 
+
+        Set<Authority> setAuth = new HashSet<>();
+        Authority a = new Authority();
+        a.setAuthority("ROLE_USER");
+        a.setEmail(userDto.getEmail());
+        setAuth.add(a);
+        user.setAuthorities(setAuth);
+
+
         userRepository.save(user);
     }
 
@@ -70,9 +78,9 @@ public class UserService {
     }
 
     @Transactional
-    public Optional<UserOutputDto> getUserById(String username) {
+    public UserOutputDto getUserById(String username) {
         Optional<User> userOptional = userRepository.findById(username);
-        return userOptional.map(this::convertToDto);
+        return convertToDto(userOptional.get());
     }
 
     @Transactional
@@ -98,6 +106,7 @@ public class UserService {
         userRepository.delete(userOptional.get());
         return true;
     }
+
 
     public UserOutputDto getUserByEmail(String email) {
         Optional<User> oUser = userRepository.findById(email);
@@ -151,11 +160,15 @@ public class UserService {
         userDto.setLastname(user.getLastname());
         userDto.setUsername(user.getUsername());
         userDto.setRiDesigner(user.isRiDesigner());
-        userDto.setImageData(ImageUtil.decompressImage(user.getImageData().getImageData()));
+        if(user.getImageData() != null){
+            userDto.setImageData(ImageUtil.decompressImage(user.getImageData().getImageData()));
+        }
 
         userDto.setAuthorities(user.getAuthorities());
         userDto.setFavorites(user.getFavorites());
-        userDto.setProducts(productService.productDtoList(user.getProducts()));
+        if (user.getProducts() != null){
+            userDto.setProducts(productService.productDtoList(user.getProducts()));
+        }
 
         return userDto;
     }

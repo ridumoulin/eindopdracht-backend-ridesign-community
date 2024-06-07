@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -25,7 +27,14 @@ public class ShoppingCartController {
     @PostMapping("/user/{email}/products/{productId}/add-to-cart")
     public ResponseEntity<ShoppingCartDto> addProductToCart(@PathVariable String email, @PathVariable Long productId) {
         ShoppingCartDto updatedCart = shoppingCartService.addProductToCart(productId, email);
-        return new ResponseEntity<>(updatedCart, HttpStatus.OK);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{cartId}")
+                .buildAndExpand(email)
+                .toUri();
+
+        return ResponseEntity.created(uri).body(updatedCart);
     }
 
     @GetMapping("/user/{email}/products")

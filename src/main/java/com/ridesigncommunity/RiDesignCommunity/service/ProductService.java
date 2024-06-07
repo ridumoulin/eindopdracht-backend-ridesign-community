@@ -27,7 +27,7 @@ public class ProductService {
         this.userRepository = userRepository;
     }
 
-
+@Transactional
     public ProductDto createProduct(ProductDto productDto) {
         validateProductDto(productDto);
 

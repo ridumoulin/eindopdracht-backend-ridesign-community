@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.Transient;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +31,12 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
         ProductDto createdProduct = productService.createProduct(productDto);
-        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+
+        URI uri = URI.create(
+                ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/" + productDto.getProductId()).toUriString());
+       return ResponseEntity.created(uri).body(createdProduct);
     }
 
     @GetMapping

@@ -5,13 +5,18 @@ import static org.mockito.Mockito.*;
 import com.ridesigncommunity.RiDesignCommunity.dto.UserInputDto;
 import com.ridesigncommunity.RiDesignCommunity.dto.UserOutputDto;
 import com.ridesigncommunity.RiDesignCommunity.model.User;
+import com.ridesigncommunity.RiDesignCommunity.model.ImageData;
 import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
+import com.ridesigncommunity.RiDesignCommunity.utils.ImageUtil;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,11 +32,24 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
+    @InjectMocks
+    private ProductService productService;
+
     private User user;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws IOException {
         user = new User("halinademol@outlook.com", "HalinaisCool", "Halina", "de Mol,", "HalinaDesignLover", false);
+
+
+//        ImageData imgdata = new ImageData();
+//        imgdata.setImageData(ImageUtil.compressImage(Files.readAllBytes(Paths.get("src/main/resources/images/products/" + imageFile))));
+//        imgdata.setType("image/" + imageFile.substring(imageFile.lastIndexOf(".")));
+
+        ImageData imageData = new ImageData();
+        imageData.setImageData(ImageUtil.compressImage(Files.readAllBytes(Paths.get("src/test/java/resources/photo-profile-catrina.jpeg"))));
+        imageData.setType("image/jpeg");
+        user.setImageData(imageData);
     }
 
     @AfterEach
@@ -101,10 +119,10 @@ public class UserServiceTest {
 
         when(userRepositoryMock.findById(anyString())).thenReturn(Optional.of(user));
 
-        Optional<UserOutputDto> result = userService.getUserById("halinademol@outlook.com");
+        UserOutputDto result = userService.getUserById("halinademol@outlook.com");
 
-        assertTrue(result.isPresent());
-        assertEquals("HalinaDesignLover", result.get().getUsername());
+
+        assertEquals("HalinaDesignLover", result.getUsername());
         verify(userRepositoryMock, times(1)).findById(anyString());
     }
 

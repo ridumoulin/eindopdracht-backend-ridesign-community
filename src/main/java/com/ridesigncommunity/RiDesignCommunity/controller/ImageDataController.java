@@ -11,8 +11,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,14 +39,29 @@ public class ImageDataController {
     @PostMapping("/product/{productId}")
     public ResponseEntity<Object> uploadImages(@RequestParam("file") MultipartFile multipartFile, @PathVariable Long productId) throws IOException {
         String image = imageDataService.uploadImages(multipartFile, productId);
-        return ResponseEntity.ok("File has been uploaded for product with ID " + productId + ": " + image);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(image)
+                .toUri();
+
+        return ResponseEntity.created(uri).body("File has been uploaded for product with ID " + productId + ": " + image);
     }
 
     @PostMapping("/user/{username}")
     public ResponseEntity<Object> uploadImage(@RequestParam("file") MultipartFile multipartFile, @PathVariable String username) throws IOException {
         String image = imageDataService.uploadImage(multipartFile, username);
-        return ResponseEntity.ok("File has been uploaded for user with ID " + username + ": " + image);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(image)
+                .toUri();
+
+        return ResponseEntity.created(uri).body("File has been uploaded for user with username " + username + ": " + image);
     }
+
 
     @GetMapping("/product/{productId}")
     public ResponseEntity<Object> downloadImages(@PathVariable Long productId) throws IOException {

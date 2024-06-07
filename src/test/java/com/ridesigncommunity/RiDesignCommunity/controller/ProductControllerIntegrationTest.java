@@ -1,5 +1,7 @@
 package com.ridesigncommunity.RiDesignCommunity.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,25 +15,29 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import static org.hamcrest.MatcherAssert.assertThat;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.matchesPattern;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
-
 class ProductControllerIntegrationTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
+        // Any setup code if necessary
     }
 
     @AfterEach
     void tearDown() {
+        // Any teardown code if necessary
     }
 
     @Test
@@ -39,10 +45,7 @@ class ProductControllerIntegrationTest {
         String jsonInput = """
                 {
                     "productTitle": "Eikenhouten bed Natura",
-                    "images": [
-                            "base64_encoded_image_data_1",
-                            "base64_encoded_image_data_2"
-                            ],
+                    "images": [],
                     "category": "Bedden",
                     "measurements": "180x200x50 cm",
                     "materials": "Eikenhout",
@@ -53,19 +56,24 @@ class ProductControllerIntegrationTest {
                         "Bezorgen",
                         "Ophalen"
                     ],
+                    "productId": 7
                 }
                 """;
 
-        MvcResult result = mockMvc
-                .perform(MockMvcRequestBuilders.post("/products")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonInput))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andReturn();
 
-        String createdID = result.getResponse().getContentAsString();
-        assertThat(result.getResponse().getHeader("Location"), matchesPattern("^.*/products/" + createdID));
+        String responseBody = result.getResponse().getContentAsString();
+        JsonNode jsonNode = objectMapper.readTree(responseBody);
+        int createdId = jsonNode.get("productId").asInt();
 
+        String locationHeader = result.getResponse().getHeader("Location");
+        assertThat("Location header should match the expected URL pattern",
+                locationHeader, matchesPattern(".*/products/" + createdId));
     }
 }
+

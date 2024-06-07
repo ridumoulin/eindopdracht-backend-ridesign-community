@@ -11,7 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +32,14 @@ public class InquiryController {
     @PostMapping
     public ResponseEntity<InquiryDto> createInquiry(@RequestBody InquiryDto inquiryDto) {
         InquiryDto createdInquiryDto = inquiryService.createInquiry(inquiryDto);
-        return new ResponseEntity<>(createdInquiryDto, HttpStatus.CREATED);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{inquiryId}")
+                .buildAndExpand(createdInquiryDto.getInquiryId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(createdInquiryDto);
     }
 
     @GetMapping

@@ -1,5 +1,6 @@
 package com.ridesigncommunity.RiDesignCommunity.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,6 @@ public class User {
     }
 
     public User() {
-
     }
 
     public String getFirstname() {
@@ -140,6 +140,10 @@ public class User {
 
     public List<Long> getFavorites() {
         return favorites;
+    }
+
+    public void addAuthority(Authority authority) {
+        this.authorities.add(authority);
     }
 }
 
