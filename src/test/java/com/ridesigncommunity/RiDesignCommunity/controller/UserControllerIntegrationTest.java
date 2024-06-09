@@ -54,7 +54,8 @@ class UserControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andReturn();
 
-        String responseBody = result.getResponse().getContentAsString();
-        assertEquals("User registered successfully.", responseBody);
+        String locationHeader = result.getResponse().getHeader("Location");
+        assertNotNull(locationHeader);
+        assertTrue(locationHeader.contains("/users/Annemiekvanslageren@gmail.com"));
     }
 }

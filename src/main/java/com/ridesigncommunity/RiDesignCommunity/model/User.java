@@ -56,13 +56,14 @@ public class User {
 
     }
 
-    public User(String email, String password, String firstname, String lastname, String username, boolean isRiDesigner) {
+    public User(String email, String password, String firstname, String lastname, String username, boolean isRiDesigner, Set<Authority> authorities) {
         this.email = email;
         this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
         this.isRiDesigner = isRiDesigner;
+        this.authorities = authorities;
     }
 
     public User() {
