@@ -51,8 +51,8 @@ public class UserController {
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{email}")
-                .buildAndExpand(userDto.getEmail())
+                .path("/register")
+                .build()
                 .toUri();
 
         return ResponseEntity.created(uri).body("User registered successfully.");

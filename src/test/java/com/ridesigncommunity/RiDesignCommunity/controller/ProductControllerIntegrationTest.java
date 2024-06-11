@@ -32,12 +32,10 @@ class ProductControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        // Any setup code if necessary
     }
 
     @AfterEach
     void tearDown() {
-        // Any teardown code if necessary
     }
 
     @Test

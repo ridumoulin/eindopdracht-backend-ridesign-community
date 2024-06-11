@@ -35,7 +35,7 @@ public class InquiryController {
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{inquiryId}")
+                .path("/")
                 .buildAndExpand(createdInquiryDto.getInquiryId())
                 .toUri();
 

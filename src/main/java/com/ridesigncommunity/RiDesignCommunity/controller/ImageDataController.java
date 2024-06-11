@@ -42,7 +42,7 @@ public class ImageDataController {
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{id}")
+                .path("/product/{productId}")
                 .buildAndExpand(image)
                 .toUri();
 
@@ -55,13 +55,12 @@ public class ImageDataController {
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{id}")
+                .path("/user/{username}")
                 .buildAndExpand(image)
                 .toUri();
 
-        return ResponseEntity.created(uri).body("File has been uploaded for user with username " + username + ": " + image);
+        return ResponseEntity.created(uri).body("File has been uploaded for user with email " + username + ": " + image);
     }
-
 
     @GetMapping("/product/{productId}")
     public ResponseEntity<Object> downloadImages(@PathVariable Long productId) throws IOException {

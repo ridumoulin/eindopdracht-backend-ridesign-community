@@ -30,8 +30,8 @@ public class ShoppingCartController {
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(email)
+                .path("/user/{email}/products/{productId}/add-to-cart")
+                .buildAndExpand(email, productId)
                 .toUri();
 
         return ResponseEntity.created(uri).body(updatedCart);

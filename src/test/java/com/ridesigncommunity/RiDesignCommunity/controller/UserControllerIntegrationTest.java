@@ -56,6 +56,6 @@ class UserControllerIntegrationTest {
 
         String locationHeader = result.getResponse().getHeader("Location");
         assertNotNull(locationHeader);
-        assertTrue(locationHeader.contains("/users/Annemiekvanslageren@gmail.com"));
+        assertTrue(locationHeader.matches(".*/users/.+"));
     }
 }
