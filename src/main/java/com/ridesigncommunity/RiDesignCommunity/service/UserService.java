@@ -70,7 +70,7 @@ public class UserService {
     public boolean authenticateUser(UserInputDto userDto) {
         Optional<User> oUser = userRepository.findById(userDto.getEmail());
 
-        if (oUser == null) {
+        if (oUser == null || !oUser.isPresent()) {
             return false;
         }
 
@@ -108,13 +108,12 @@ public class UserService {
     }
 
 
-    public UserOutputDto getUserByEmail(String email) {
+    public Optional<UserOutputDto> getUserByEmail(String email) {
         Optional<User> oUser = userRepository.findById(email);
-        if (oUser.isPresent()){
-        return convertToDto(oUser.get());
-        }
-        else {
-            return null;
+        if (oUser.isPresent()) {
+            return Optional.of(convertToDto(oUser.get()));
+        } else {
+            return Optional.empty();
         }
     }
 
@@ -149,8 +148,10 @@ public class UserService {
             favorites.remove(productId);
             user.setFavorites(favorites);
             userRepository.save(user);
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
 
     public UserOutputDto convertToDto(User user) {

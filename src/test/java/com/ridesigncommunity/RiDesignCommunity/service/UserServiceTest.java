@@ -165,7 +165,9 @@ public class UserServiceTest {
         boolean result = userService.authenticateUser(userInputDto);
 
         assertFalse(result);
+
         verify(userRepositoryMock, times(1)).findById(userInputDto.getEmail());
+
         verify(passwordEncoderMock, never()).matches(anyString(), anyString());
     }
 
@@ -197,6 +199,19 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Should not update username when user not found")
+    void shouldNotUpdateUsernameWhenUserNotFound() {
+
+        when(userRepositoryMock.findById(anyString())).thenReturn(Optional.empty());
+
+        boolean result = userService.updateUsername("keeskaasje@gmail.com", "KeesKaas");
+
+        assertFalse(result);
+        verify(userRepositoryMock, times(1)).findById(anyString());
+        verify(userRepositoryMock, never()).save(any(User.class));
+    }
+
+    @Test
     @DisplayName("Should delete user")
     void deleteUser() {
 
@@ -209,42 +224,157 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Should not delete user when user not found")
+    void shouldNotDeleteUserWhenUserNotFound() {
+        when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.empty());
+
+        boolean result = userService.deleteUser("MikaDesign");
+
+        assertFalse(result);
+
+        verify(userRepositoryMock, never()).delete(any(User.class));
+    }
+
+    @Test
     @DisplayName("Should get user by email")
     void getUserByEmail() {
-
         when(userRepositoryMock.findById(anyString())).thenReturn(Optional.of(user));
 
-        UserOutputDto result = userService.getUserByEmail("halinademol@outlook.com");
+        Optional<UserOutputDto> result = userService.getUserByEmail("halinademol@outlook.com");
 
-        assertNotNull(result);
-        assertEquals("HalinaDesignLover", result.getUsername());
+        assertTrue(result.isPresent());
+        assertEquals("HalinaDesignLover", result.get().getUsername());
         verify(userRepositoryMock, times(1)).findById(anyString());
     }
 
     @Test
+    @DisplayName("Should return empty Optional when user not found by email")
+    void shouldReturnEmptyOptionalWhenUserNotFoundByEmail() {
+        when(userRepositoryMock.findById(anyString())).thenReturn(Optional.empty());
+
+        Optional<UserOutputDto> result = userService.getUserByEmail("donnameulen@gmail.com");
+
+        assertTrue(result.isEmpty());
+        verify(userRepositoryMock, times(1)).findById(anyString());
+    }
+
+
+    @Test
     @DisplayName("Should add favorite product")
     void addFavorite() {
+
         when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.of(user));
 
         boolean result = userService.addFavorite("HalinaDesignLover", 2L);
 
         assertTrue(result);
         assertTrue(user.getFavorites().contains(2L));
+
         verify(userRepositoryMock, times(1)).findByUsername(anyString());
         verify(userRepositoryMock, times(1)).save(any(User.class));
+
+        reset(userRepositoryMock);
+        when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.of(user));
+        result = userService.addFavorite("HalinaDesignLover", 2L);
+
+        assertFalse(result);
+
+        verify(userRepositoryMock, times(1)).findByUsername(anyString());
+        verify(userRepositoryMock, never()).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("Should not add favorite when user not found")
+    void shouldNotAddFavoriteWhenUserNotFound() {
+
+        when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.empty());
+
+        boolean result = userService.addFavorite("KeesKaas", 2L);
+
+        assertFalse(result);
+        verify(userRepositoryMock, times(1)).findByUsername(anyString());
+        verify(userRepositoryMock, never()).save(any(User.class));
     }
 
     @Test
     @DisplayName("Should remove favorite product")
     void removeFavorite() {
+
         when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.of(user));
 
         boolean result = userService.removeFavorite("HalinaDesignLover", 1L);
 
         assertTrue(result);
-        assertTrue(user.getFavorites().isEmpty());
+        assertFalse(user.getFavorites().contains(1L));
         verify(userRepositoryMock, times(1)).findByUsername(anyString());
         verify(userRepositoryMock, times(1)).save(any(User.class));
+    }
+
+
+    @Test
+    @DisplayName("Should not remove favorite product when user not found")
+    void removeFavorite_UserNotFound() {
+
+        when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.empty());
+
+        boolean result = userService.removeFavorite("PipodeClown", 2L);
+
+        assertFalse(result);
+        verify(userRepositoryMock, times(1)).findByUsername(anyString());
+        verify(userRepositoryMock, never()).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("Should not remove favorite product when product not found in favorites")
+    void removeFavorite_ProductNotFound() {
+
+        when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.of(user));
+
+        boolean result = userService.removeFavorite("HalinaDesignLover", 2L);
+
+        assertFalse(result);
+        verify(userRepositoryMock, times(1)).findByUsername(anyString());
+        verify(userRepositoryMock, never()).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when password is null")
+    void validateUserInput_PasswordIsNull_ShouldThrowIllegalArgumentException() {
+
+        UserInputDto userInputDto = new UserInputDto("pipodeclown@gmail.com", null, "Pipo", "de Clown", "PipoDC", false);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.validateUserInput(userInputDto));
+        assertEquals("Password cannot be empty.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when email is empty")
+    void validateUserInput_EmailIsEmpty_ShouldThrowIllegalArgumentException() {
+
+        UserInputDto userInputDto = new UserInputDto("", "password", "Pipo", "de Clown", "PipoDC", false);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.validateUserInput(userInputDto));
+        assertEquals("Email cannot be empty.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when first name is null")
+    void validateUserInput_FirstNameIsNull_ShouldThrowIllegalArgumentException() {
+
+        UserInputDto userInputDto = new UserInputDto("pipodeclown@gmail.com", "password", null, "de Clown", "PipoDC", false);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.validateUserInput(userInputDto));
+        assertEquals("First name cannot be empty.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when last name is null")
+    void validateUserInput_LastNameIsNull_ShouldThrowIllegalArgumentException() {
+
+        UserInputDto userInputDto = new UserInputDto("pipodeclown@gmail.com", "password", "Pipo", null, "PipoDC", false);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.validateUserInput(userInputDto));
+        assertEquals("Last name cannot be empty.", exception.getMessage());
     }
 
 }

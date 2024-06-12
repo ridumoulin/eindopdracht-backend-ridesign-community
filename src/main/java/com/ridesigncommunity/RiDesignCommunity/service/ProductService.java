@@ -107,7 +107,7 @@ public class ProductService {
     }
 
 
-    private void validateProductDto(ProductDto productDto) {
+    public void validateProductDto(ProductDto productDto) {
         if (productDto.getProductTitle() == null || productDto.getProductTitle().isEmpty()) {
             throw new IllegalArgumentException("Product title must not be empty");
         }

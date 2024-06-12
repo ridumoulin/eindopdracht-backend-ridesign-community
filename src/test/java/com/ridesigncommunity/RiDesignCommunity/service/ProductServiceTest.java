@@ -149,6 +149,18 @@ public class ProductServiceTest {
         verify(productRepositoryMock, times(1)).deleteById(1L);
     }
 
+    @Test
+    @DisplayName("Should throw exception when deleting non-existing product")
+    void deleteNonExistingProduct_ShouldThrowEntityNotFoundException() {
+
+        when(productRepositoryMock.getReferenceById(anyLong())).thenReturn(null);
+
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> productService.deleteProduct(7L));
+        assertEquals("Product not found with ID: 7", exception.getMessage());
+
+        verify(productRepositoryMock, never()).deleteById(anyLong());
+    }
 
     @Test
     @DisplayName("Should get products by category")
@@ -221,6 +233,29 @@ public class ProductServiceTest {
         when(productRepositoryMock.findByCategoryIgnoreCase(category)).thenReturn(List.of(product));
 
         List<ProductDto> result = productService.searchProducts(category, null);
+
+        assertEquals(1, result.size());
+        assertEquals("Bank in nieuw jasje", result.get(0).getProductTitle());
+    }
+
+    @Test
+    @DisplayName("Should search products by product title only")
+    void searchProductsByProductTitleOnly() {
+        String productTitle = "Bank";
+        when(productRepositoryMock.findByProductTitleContainingIgnoreCase(productTitle)).thenReturn(List.of(product));
+
+        List<ProductDto> result = productService.searchProducts(null, productTitle);
+
+        assertEquals(1, result.size());
+        assertEquals("Bank in nieuw jasje", result.get(0).getProductTitle());
+    }
+
+    @Test
+    @DisplayName("Should search all products when both category and product title are null")
+    void searchAllProductsWhenBothCategoryAndProductTitleAreNull() {
+        when(productRepositoryMock.findAll()).thenReturn(List.of(product));
+
+        List<ProductDto> result = productService.searchProducts(null, null);
 
         assertEquals(1, result.size());
         assertEquals("Bank in nieuw jasje", result.get(0).getProductTitle());
@@ -313,20 +348,41 @@ public class ProductServiceTest {
         assertEquals(product.getUser().getUsername(), productDto.getUsername());
     }
 
-//    @Test
-//    @DisplayName("Should convert list of products to list of product DTOs")
-//    void productDtoList() {
-//
-//        Product product = new Product();
-//        product.setProductId(1L);
-//
-//        List<Product> productList = new ArrayList<>();
-//        productList.add(product);
-//
-//        when(productService.fromModelToProductDto(any(Product.class))).thenReturn(new ProductDto());
-//
-//        List<ProductDto> productDtoList = productService.productDtoList(productList);
-//
-//        assertEquals(productList.size(), productDtoList.size());
-//    }
+    @Test
+    @DisplayName("Should throw exception when measurements is null")
+    void validateProductDto_MeasurementsIsNull_ShouldThrowIllegalArgumentException() {
+
+        ProductDto productDto = new ProductDto();
+        productDto.setProductTitle("The cool Couch");
+        productDto.setCategory("Banken");
+        productDto.setMeasurements(null);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> productService.validateProductDto(productDto));
+        assertEquals("Measurements must not be empty", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw exception when measurements is empty")
+    void validateProductDto_MeasurementsIsEmpty_ShouldThrowIllegalArgumentException() {
+
+        ProductDto productDto = new ProductDto();
+        productDto.setProductTitle("The cool Couch");
+        productDto.setCategory("Banken");
+        productDto.setMeasurements("");
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> productService.validateProductDto(productDto));
+        assertEquals("Measurements must not be empty", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should convert list of products to list of product DTOs")
+    void productDtoList() {
+
+        List<Product> productList = new ArrayList<>();
+        productList.add(product);
+
+        List<ProductDto> productDtoList = productService.productDtoList(productList);
+
+        assertEquals(productList.size(), productDtoList.size());
+    }
 }
