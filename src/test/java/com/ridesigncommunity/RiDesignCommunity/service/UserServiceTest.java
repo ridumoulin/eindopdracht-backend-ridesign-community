@@ -102,6 +102,21 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw exception if email already registered")
+    void shouldThrowExceptionIfEmailAlreadyRegistered() {
+        UserInputDto userInputDto = new UserInputDto("halinademol@outlook.com", "HalinaisCool", "Halina", "de Mol", "HalinaDesignLover", false);
+
+        when(userRepositoryMock.existsById(anyString())).thenReturn(true);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            userService.registerUser(userInputDto);
+        });
+
+        assertEquals("Email address is already registered.", exception.getMessage());
+        verify(userRepositoryMock, never()).save(any(User.class));
+    }
+
+    @Test
     @DisplayName("Should throw IllegalArgumentException when registering user with empty username")
     void registerUser_WithEmptyUsername_ShouldThrowIllegalArgumentException() {
         UserInputDto userInputDto = new UserInputDto("halinademol@outlook.com", "HalinaisCool", "Halina", "de Mol", "", false);
@@ -112,31 +127,6 @@ public class UserServiceTest {
         verify(userRepositoryMock, never()).save(any());
     }
 
-//    @Test
-//    @DisplayName("Should register user when user does not exist")
-//    void registerUser_UserDoesNotExist_ShouldRegisterUser() {
-//        UserInputDto userInputDto = new UserInputDto("newuser@example.com", "Password", "John", "Doe", "john.doe", false);
-//
-//        when(userRepositoryMock.existsById(anyString())).thenReturn(false);
-//        when(passwordEncoderMock.encode(anyString())).thenReturn("EncodedPassword");
-//
-//        userService.registerUser(userInputDto);
-//
-//        verify(userRepositoryMock, times(1)).save(any());
-//    }
-
-//    @Test
-//    @DisplayName("Should not register user when user already exists")
-//    void registerUser_UserExists_ShouldNotRegisterUser() {
-//        UserInputDto userInputDto = new UserInputDto("halinademol@outlook.com", "HalinaisCool", "Halina", "de Mol", "HalinaDesignLover", false);
-//
-//        when(userRepositoryMock.existsById(anyString())).thenReturn(true);
-//
-//        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.registerUser(userInputDto));
-//
-//        assertEquals("Email address is already registered.", exception.getMessage());
-//        verify(userRepositoryMock, never()).save(any());
-//    }
     @Test
     @DisplayName("Should check if email exists")
     void existsByEmail() {
@@ -165,20 +155,19 @@ public class UserServiceTest {
         verify(passwordEncoderMock, times(1)).matches(anyString(), anyString());
     }
 
-//    @Test
-//    @DisplayName("Should authenticate user with correct credentials")
-//    void authenticateUser_CorrectCredentials_ShouldReturnTrue() {
-//        UserInputDto userInputDto = new UserInputDto("halinademol@outlook.com", "HalinaisCool");
-//
-//        when(userRepositoryMock.findById(anyString())).thenReturn(Optional.of(user));
-//        when(passwordEncoderMock.matches(anyString(), anyString())).thenReturn(true);
-//
-//        boolean result = userService.authenticateUser(userInputDto);
-//
-//        assertTrue(result);
-//        verify(userRepositoryMock, times(1)).findById(anyString());
-//        verify(passwordEncoderMock, times(1)).matches(anyString(), anyString());
-//    }
+    @Test
+    @DisplayName("Should not authenticate user when user not found")
+    void shouldNotAuthenticateUserWhenUserNotFound() {
+        UserInputDto userInputDto = new UserInputDto("lilydemol@outlook.com", "password");
+
+        when(userRepositoryMock.findById(userInputDto.getEmail())).thenReturn(Optional.empty());
+
+        boolean result = userService.authenticateUser(userInputDto);
+
+        assertFalse(result);
+        verify(userRepositoryMock, times(1)).findById(userInputDto.getEmail());
+        verify(passwordEncoderMock, never()).matches(anyString(), anyString());
+    }
 
     @Test
     @DisplayName("Should get user by ID")
@@ -206,19 +195,6 @@ public class UserServiceTest {
         verify(userRepositoryMock, times(1)).findById(anyString());
         verify(userRepositoryMock, times(1)).save(any(User.class));
     }
-
-//    @Test
-//    @DisplayName("Should return true when updating username successfully")
-//    void updateUsername_SuccessfulUpdate_ShouldReturnTrue() {
-//        when(userRepositoryMock.findById(anyString())).thenReturn(Optional.of(user));
-//
-//        boolean result = userService.updateUsername("halinademol@outlook.com", "HalinaLovesDesign");
-//
-//        assertTrue(result);
-//        assertEquals("HalinaLovesDesign", user.getUsername());
-//        verify(userRepositoryMock, times(1)).findById(anyString());
-//        verify(userRepositoryMock, times(1)).save(any());
-//    }
 
     @Test
     @DisplayName("Should delete user")

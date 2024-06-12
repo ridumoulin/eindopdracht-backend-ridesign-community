@@ -8,6 +8,7 @@ import com.ridesigncommunity.RiDesignCommunity.model.ImageData;
 import com.ridesigncommunity.RiDesignCommunity.model.User;
 import com.ridesigncommunity.RiDesignCommunity.repository.ImageDataRepository;
 import com.ridesigncommunity.RiDesignCommunity.utils.ImageUtil;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,9 +21,11 @@ import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.repository.ProductRepository;
 import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -175,6 +178,15 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw exception when user does not exist")
+    void getProductsByNonExistingUsername() {
+        String nonExistingUsername = "HellieBellie";
+        when(userRepositoryMock.existsById(nonExistingUsername)).thenReturn(false);
+
+        assertThrows(EntityNotFoundException.class, () -> productService.getProductsByUsername(nonExistingUsername));
+    }
+
+    @Test
     @DisplayName("Should get product by Id")
     void getProductById() {
 
@@ -301,4 +313,20 @@ public class ProductServiceTest {
         assertEquals(product.getUser().getUsername(), productDto.getUsername());
     }
 
+//    @Test
+//    @DisplayName("Should convert list of products to list of product DTOs")
+//    void productDtoList() {
+//
+//        Product product = new Product();
+//        product.setProductId(1L);
+//
+//        List<Product> productList = new ArrayList<>();
+//        productList.add(product);
+//
+//        when(productService.fromModelToProductDto(any(Product.class))).thenReturn(new ProductDto());
+//
+//        List<ProductDto> productDtoList = productService.productDtoList(productList);
+//
+//        assertEquals(productList.size(), productDtoList.size());
+//    }
 }
