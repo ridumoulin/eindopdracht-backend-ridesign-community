@@ -3,68 +3,111 @@ package com.ridesigncommunity.RiDesignCommunity.service;
 import com.ridesigncommunity.RiDesignCommunity.dto.ProductDto;
 import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.repository.ProductRepository;
+import com.ridesigncommunity.RiDesignCommunity.repository.UserRepository;
+import com.ridesigncommunity.RiDesignCommunity.utils.ImageUtil;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, UserRepository userRepository) {
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
-    public Product createProduct(ProductDto productDto) {
+@Transactional
+    public ProductDto createProduct(ProductDto productDto) {
         validateProductDto(productDto);
 
         Product product = new Product();
         product.setProductTitle(productDto.getProductTitle());
         product.setCategory(productDto.getCategory());
         product.setMeasurements(productDto.getMeasurements());
+        product.setMaterials(productDto.getMaterials());
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
         product.setDeliveryOptions(productDto.getDeliveryOptions());
+        product.setUser(userRepository.findByUsername(productDto.getUsername()).orElseThrow(()->new UsernameNotFoundException(productDto.getUsername())));
 
-        return productRepository.save(product);
-
+        return fromModelToProductDto(productRepository.save(product));
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    @Transactional
+    public List<ProductDto> getAllProducts() {
+        List<Product> allProducts = productRepository.findAll();
+        List<ProductDto> availableProducts = new ArrayList<>();
+
+        List<ProductDto> productDtos = new ArrayList<>();
+        for (Product p : allProducts) {
+            productDtos.add(fromModelToProductDto(p));
+        }
+
+        for (ProductDto product : productDtos) {
+            if (product.getPrice() > 0) {
+                availableProducts.add(product);
+            }
+        }
+        return availableProducts;
     }
 
-    public List<Product> getProductsByCategory(String category) {
-        return productRepository.findByCategory(category);
+    @Transactional
+    public List<ProductDto> getProductsByCategory(String category) {
+        String trimmedCategory = category.trim();
+        List<Product> products = productRepository.findByCategoryIgnoreCase(trimmedCategory);
+        List<ProductDto> productDtos = new ArrayList<>();
+        for (Product p : products) {
+            productDtos.add(fromModelToProductDto(p));
+        }
+        return productDtos;
     }
 
-    public List<Product> getProductsByUserId(Long userId) {
-        return productRepository.findByUserId(userId);
+    public List<Product> getProductsByUsername(String username) {
+        if (!userRepository.existsById(username)) {
+            throw new EntityNotFoundException("User not found with ID: " + username);
+        }
+        return productRepository.findProductByUser_Username(username);
     }
 
-    public Product getProductById(Long productId) {
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-        return optionalProduct.orElse(null);
+    @Transactional
+    public ProductDto getProductById(Long productId) {
+        Product product = productRepository.getById(productId);
+        return fromModelToProductDto(product);
     }
 
-    public List<Product> searchProducts(String category, String productTitle) {
+    public List<ProductDto> searchProducts(String category, String productTitle) {
+        List<Product> products = new ArrayList<>();
+        List<ProductDto> productsDto = new ArrayList<>();
         if (category != null && productTitle != null) {
-            return productRepository. findByCategoryAndProductTitleContainingIgnoreCase(category, productTitle);
+            products = productRepository.findByCategoryAndProductTitleContainingIgnoreCase(category, productTitle);
         } else if (category != null) {
-            return productRepository.findByCategoryIgnoreCase(category);
+            products = productRepository.findByCategoryIgnoreCase(category);
         } else if (productTitle != null) {
-            return productRepository.findByProductTitleContainingIgnoreCase(productTitle);
+            products = productRepository.findByProductTitleContainingIgnoreCase(productTitle);
         } else {
             return getAllProducts();
         }
+        if (!products.isEmpty()) {
+            for (Product p : products) {
+                productsDto.add(fromModelToProductDto(p));
+            }
+        }
+        return productsDto;
     }
 
-    private void validateProductDto(ProductDto productDto) {
+
+    public void validateProductDto(ProductDto productDto) {
         if (productDto.getProductTitle() == null || productDto.getProductTitle().isEmpty()) {
             throw new IllegalArgumentException("Product title must not be empty");
         }
@@ -83,11 +126,35 @@ public class ProductService {
     }
 
     public void deleteProduct(Long productId) {
-        Product existingProduct = getProductById(productId);
+        Product existingProduct = productRepository.getReferenceById(productId);
         if (existingProduct == null) {
             throw new EntityNotFoundException("Product not found with ID: " + productId);
         }
         productRepository.deleteById(productId);
     }
+
+    public ProductDto fromModelToProductDto(Product product) {
+        ProductDto pdto = new ProductDto();
+        pdto.setProductId(product.getProductId());
+        pdto.setCategory(product.getCategory());
+        pdto.setProductTitle(product.getProductTitle());
+        pdto.setDescription(product.getDescription());
+        pdto.setImages(ImageUtil.decompressImageList(product.getImages()));
+        pdto.setMaterials(product.getMaterials());
+        pdto.setMeasurements(product.getMeasurements());
+        pdto.setPrice(product.getPrice());
+        pdto.setDeliveryOptions(product.getDeliveryOptions());
+        pdto.setUsername(product.getUser().getUsername());
+        return pdto;
+    }
+
+    public List<ProductDto> productDtoList(List<Product> productList) {
+        List<ProductDto> productDtoList = new ArrayList<>();
+        productList.forEach(product -> productDtoList.add(fromModelToProductDto(product)));
+        return productDtoList;
+    }
+
 }
+
+
 

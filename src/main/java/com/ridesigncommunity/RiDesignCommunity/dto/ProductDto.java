@@ -2,6 +2,7 @@ package com.ridesigncommunity.RiDesignCommunity.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ridesigncommunity.RiDesignCommunity.model.ImageData;
+import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -10,30 +11,32 @@ import java.util.List;
 
 public class ProductDto {
 
-    @JsonProperty("userId")
-    public Long productId;
+    @JsonProperty("productId")
+    private Long productId;
 
     @NotBlank
-    public String productTitle;
+    private String productTitle;
 
     @NotBlank
-    public List<ImageData> images = new ArrayList<>();
+    private List<byte[]> images = new ArrayList<>();
 
     @NotBlank
-    public String category;
+    private String category;
 
     @NotBlank
-    public String measurements;
+    private String measurements;
 
     @NotBlank
     private String materials;
 
     @NotBlank
     @Size(min=30)
-    public String description;
+    private String description;
 
     @NotBlank
-    public double price;
+    private double price;
+
+    private String username;
 
     public List<String> deliveryOptions = new ArrayList<>();
 
@@ -93,11 +96,11 @@ public class ProductDto {
         this.deliveryOptions = deliveryOptions;
     }
 
-    public List<ImageData> getImages() {
+    public List<byte[]> getImages() {
         return images;
     }
 
-    public void setImages(List<ImageData> images) {
+    public void setImages(List<byte[]> images) {
         this.images = images;
     }
 
@@ -107,5 +110,13 @@ public class ProductDto {
 
     public void setMaterials(String materials) {
         this.materials = materials;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

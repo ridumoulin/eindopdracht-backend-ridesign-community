@@ -12,11 +12,11 @@ public class ShoppingCartDto {
     public Long cartId;
 
     @NotNull
-    public User userId;
+    public String userId;
 
     @NotNull
     @Size(max = 5)
-    public List<Product> products;
+    public List<ProductDto> products;
 
     public Long getCartId() {
         return cartId;
@@ -26,19 +26,22 @@ public class ShoppingCartDto {
         this.cartId = cartId;
     }
 
-    public User getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(User userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public List<Product> getProducts() {
+    public List<ProductDto> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(List<ProductDto> products) {
         this.products = products;
+    }
+
+    public void setEmail(String email) {
     }
 }

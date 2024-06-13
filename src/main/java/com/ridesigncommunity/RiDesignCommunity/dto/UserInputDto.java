@@ -15,9 +15,6 @@ import java.util.Set;
 
 public class UserInputDto {
 
-    @JsonProperty("userId")
-    public Long userId;
-
     @NotBlank(message = "E-mail is required")
     @Email
     public String email;
@@ -26,7 +23,7 @@ public class UserInputDto {
     @Size(min=8, max=30)
     public String password;
 
-    @NotBlank(message = "Firstname")
+    @NotBlank(message = "Firstname is required")
     public String firstname;
 
     @NotBlank(message = "Lastname is required")
@@ -39,9 +36,21 @@ public class UserInputDto {
 
     private List<Long> favorites = new ArrayList<>();
 
-    public ImageData imageData;
+    public UserInputDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
-    public Set<Authority> authorities = new HashSet<>();
+    public UserInputDto(){};
+
+    public UserInputDto(String email, String password, String firstname, String lastname, String username, boolean isRiDesigner) {
+        this.email = email;
+        this.password = password;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.username = username;
+        this.isRiDesigner = isRiDesigner;
+    }
 
     public String getEmail() { return email; }
 
@@ -75,27 +84,4 @@ public class UserInputDto {
 
     public void setRiDesigner(boolean riDesigner) { isRiDesigner = riDesigner; }
 
-
-    public ImageData getImageData() {
-        return imageData;
-    }
-
-    public void setImageData(ImageData imageData) {
-        this.imageData = imageData;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Set<Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
-    }
 }

@@ -1,5 +1,6 @@
 package com.ridesigncommunity.RiDesignCommunity.controller;
 
+import com.ridesigncommunity.RiDesignCommunity.dto.ProductDto;
 import com.ridesigncommunity.RiDesignCommunity.dto.ShoppingCartDto;
 import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.service.ShoppingCartService;
@@ -7,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -21,21 +24,29 @@ public class ShoppingCartController {
         this.shoppingCartService = shoppingCartService;
     }
 
-    @PostMapping("/user/{userId}/products/{productId}/add-to-cart")
-    public ResponseEntity<ShoppingCartDto> addProductToCart(@PathVariable Long userId, @PathVariable Long productId) {
-        ShoppingCartDto updatedCart = shoppingCartService.addProductToCart(productId, userId);
-        return new ResponseEntity<>(updatedCart, HttpStatus.OK);
+    @PostMapping("/user/{email}/products/{productId}/add-to-cart")
+    public ResponseEntity<ShoppingCartDto> addProductToCart(@PathVariable String email, @PathVariable Long productId) {
+        ShoppingCartDto updatedCart = shoppingCartService.addProductToCart(productId, email);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/user/{email}/products/{productId}/add-to-cart")
+                .buildAndExpand(email, productId)
+                .toUri();
+
+        return ResponseEntity.created(uri).body(updatedCart);
     }
 
-    @GetMapping("/user/{userId}/products")
-    public ResponseEntity<List<Product>> getProductsInCartByUserId(@PathVariable Long userId) {
-        List<Product> productsInCart = shoppingCartService.getProductsInCartByUserId(userId);
-        return ResponseEntity.ok().body(productsInCart);
+    @GetMapping("/user/{email}/products")
+    public ResponseEntity<ShoppingCartDto> getProductsInCartByEmail(@PathVariable String email) {
+        ShoppingCartDto cartDto = shoppingCartService.getProductsInCartByEmail(email);
+        cartDto.setEmail(email);
+        return ResponseEntity.ok().body(cartDto);
     }
 
-    @DeleteMapping("/user/{userId}/remove-from-cart/{productId}")
-    public ResponseEntity<Void> removeProductFromCart(@PathVariable Long userId, @PathVariable Long productId) {
-        shoppingCartService.removeProductFromCart(userId, productId);
+    @DeleteMapping("/user/{email}/remove-from-cart/{productId}")
+    public ResponseEntity<Void> removeProductFromCart(@PathVariable String email, @PathVariable Long productId) {
+        shoppingCartService.removeProductFromCart(email, productId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

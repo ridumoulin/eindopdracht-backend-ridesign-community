@@ -11,8 +11,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,14 +38,28 @@ public class ImageDataController {
 
     @PostMapping("/product/{productId}")
     public ResponseEntity<Object> uploadImages(@RequestParam("file") MultipartFile multipartFile, @PathVariable Long productId) throws IOException {
-        String image = imageDataService.uploadImage(multipartFile, productId);
-        return ResponseEntity.ok("File has been uploaded for product with ID " + productId + ": " + image);
+        String image = imageDataService.uploadImages(multipartFile, productId);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/product/{productId}")
+                .buildAndExpand(image)
+                .toUri();
+
+        return ResponseEntity.created(uri).body("File has been uploaded for product with ID " + productId + ": " + image);
     }
 
-    @PostMapping("/user/{userId}")
-    public ResponseEntity<Object> uploadImage(@RequestParam("file") MultipartFile multipartFile, @PathVariable Long userId) throws IOException {
-        String image = imageDataService.uploadImage(multipartFile, userId);
-        return ResponseEntity.ok("File has been uploaded for user with ID " + userId + ": " + image);
+    @PostMapping("/user/{username}")
+    public ResponseEntity<Object> uploadImage(@RequestParam("file") MultipartFile multipartFile, @PathVariable String username) throws IOException {
+        String image = imageDataService.uploadImage(multipartFile, username);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/user/{username}")
+                .buildAndExpand(image)
+                .toUri();
+
+        return ResponseEntity.created(uri).body("File has been uploaded for user with email " + username + ": " + image);
     }
 
     @GetMapping("/product/{productId}")
@@ -66,10 +82,10 @@ public class ImageDataController {
         }
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<Object> downloadImage(@PathVariable Long userId) throws IOException {
-        byte[] image = imageDataService.downloadImage(userId);
-        Optional<User> user = userRepository.findById(userId);
+    @GetMapping("/user/{username}")
+    public ResponseEntity<Object> downloadImage(@PathVariable String username) throws IOException {
+        byte[] image = imageDataService.downloadImage(username);
+        Optional<User> user = userRepository.findById(username);
         Optional<ImageData> dbImageData = imageDataRepository.findById(user.get().getImageData().getId());
         MediaType mediaType = MediaType.valueOf(dbImageData.get().getType());
         return ResponseEntity.ok().contentType(mediaType).body(image);

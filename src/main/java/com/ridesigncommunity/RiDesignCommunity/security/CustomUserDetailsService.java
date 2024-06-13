@@ -8,8 +8,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,19 +24,30 @@ public class CustomUserDetailsService implements UserDetailsService {
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        return loadUserByEmail(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> oUser = userRepository.findById(email);
+
+        if (!oUser.isPresent()) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
+        }
+        User user = oUser.get();
+        Collection<? extends GrantedAuthority> authorities = mapAuthorities(user.getAuthorities());
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                authorities
+        );
     }
 
-    public UserDetails loadUserByEmail(String email) {
-        User user = userRepository.findByEmail(email);
+    public CustomUserDetails loadUserByEmail(String email) {
+        Optional<User> oUser = userRepository.findById(email);
 
-        if (user == null) {
+        if (!oUser.isPresent()) {
             throw new RuntimeException("User not found with email: " + email);
         }
-
+        User user = oUser.get();
         Collection<? extends GrantedAuthority> authorities = mapAuthorities(user.getAuthorities());
 
         return new CustomUserDetails(

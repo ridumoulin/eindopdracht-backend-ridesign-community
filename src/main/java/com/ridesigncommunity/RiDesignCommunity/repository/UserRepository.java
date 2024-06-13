@@ -3,7 +3,13 @@ package com.ridesigncommunity.RiDesignCommunity.repository;
 import com.ridesigncommunity.RiDesignCommunity.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<User, String> {
+
+    Optional<User> findByUsername(String username);
+
+    Optional<User> findByEmail(String email);
+
     boolean existsByEmail(String email);
-    User findByEmail(String email);
 }

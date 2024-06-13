@@ -1,6 +1,10 @@
 package com.ridesigncommunity.RiDesignCommunity.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
+
 
 @Entity
 @Table(name = "image_data")
@@ -17,11 +21,13 @@ public class ImageData {
     private byte[] imageData;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JsonIgnore
+//    @JoinColumn(name = "product_id", referencedColumnName = "images")
     private Product product;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
+//    @JoinColumn(name = "user_id", referencedColumnName = "image_data")
     private User user;
 
     public ImageData() {

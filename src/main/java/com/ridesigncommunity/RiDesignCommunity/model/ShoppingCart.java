@@ -1,6 +1,8 @@
 package com.ridesigncommunity.RiDesignCommunity.model;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,8 +13,8 @@ public class ShoppingCart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne
+    @JoinColumn(name = "email")
     private User user;
 
     @ManyToMany
@@ -21,7 +23,14 @@ public class ShoppingCart {
             joinColumns = @JoinColumn(name = "cart_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
+
+    public ShoppingCart() {
+    }
+
+    public ShoppingCart(User user) {
+        this.user = user;
+    }
 
     public Long getCartId() {
         return cartId;
@@ -43,4 +52,7 @@ public class ShoppingCart {
         return products;
     }
 
+    public void addProduct(Product product) {
+        this.products.add(product);
+    }
 }

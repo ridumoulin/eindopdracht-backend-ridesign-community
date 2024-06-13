@@ -1,5 +1,5 @@
 package com.ridesigncommunity.RiDesignCommunity.dto;
-
+import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.model.Authority;
 import com.ridesigncommunity.RiDesignCommunity.model.ImageData;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,9 +11,6 @@ import java.util.Set;
 
 public class UserOutputDto {
 
-        @JsonProperty("userId")
-        private Long userId;
-
         private String email;
         private String firstname;
         private String lastname;
@@ -21,18 +18,12 @@ public class UserOutputDto {
         private boolean isRiDesigner;
 
         private List<Long> favorites = new ArrayList<>();
-        private ImageData imageData;
+
+        private byte[] imageData;
 
         private Set<Authority> authorities = new HashSet<>();
 
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+        private List<ProductDto> products = new ArrayList<>();
 
     public String getEmail() {
         return email;
@@ -74,11 +65,19 @@ public class UserOutputDto {
         isRiDesigner = riDesigner;
     }
 
-    public ImageData getImageData() {
+//    public ImageData getImageData() {
+//        return imageData;
+//    }
+//
+//    public void setImageData(ImageData imageData) {
+//        this.imageData = imageData;
+//    }
+
+    public byte[] getImageData() {
         return imageData;
     }
 
-    public void setImageData(ImageData imageData) {
+    public void setImageData(byte[] imageData) {
         this.imageData = imageData;
     }
 
@@ -97,4 +96,13 @@ public class UserOutputDto {
     public void setFavorites(List<Long> favorites) {
         this.favorites = favorites;
     }
+
+    public List<ProductDto> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<ProductDto> products) {
+        this.products = products;
+    }
+
 }

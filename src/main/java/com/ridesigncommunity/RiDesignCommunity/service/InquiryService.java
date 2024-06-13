@@ -4,6 +4,7 @@ import com.ridesigncommunity.RiDesignCommunity.dto.InquiryDto;
 import com.ridesigncommunity.RiDesignCommunity.model.Inquiry;
 import com.ridesigncommunity.RiDesignCommunity.repository.InquiryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,15 +29,32 @@ public class InquiryService {
         this.inquiryRepository = inquiryRepository;
     }
 
-    public Inquiry createInquiry(InquiryDto inquiryDto) {
-        validateInquiryDto(inquiryDto);
+    public InquiryDto createInquiry(InquiryDto inquiryDto) {
+        try {
+            validateInquiryDto(inquiryDto);
 
-        Inquiry inquiry = new Inquiry();
-        inquiry.setInquiryType(inquiryDto.getInquiryType());
-        inquiry.setDescription(inquiryDto.getDescription());
-        inquiry.setEmail(inquiryDto.getEmail());
+            Inquiry inquiry = new Inquiry();
+            inquiry.setInquiryType(inquiryDto.getInquiryType());
+            inquiry.setDescription(inquiryDto.getDescription());
+            inquiry.setEmail(inquiryDto.getEmail());
 
-        return inquiryRepository.save(inquiry);
+            Inquiry savedInquiry = inquiryRepository.save(inquiry);
+
+            return mapToDto(savedInquiry);
+        } catch (DataAccessException ex) {
+            throw new RuntimeException("Failed to create inquiry: " + ex.getMessage(), ex);
+        } catch (Exception ex) {
+            throw new RuntimeException("An unexpected error occurred: " + ex.getMessage(), ex);
+        }
+    }
+
+    public InquiryDto mapToDto(Inquiry inquiry) {
+        InquiryDto dto = new InquiryDto();
+        dto.setInquiryId(inquiry.getInquiryId());
+        dto.setInquiryType(inquiry.getInquiryType());
+        dto.setDescription(inquiry.getDescription());
+        dto.setEmail(inquiry.getEmail());
+        return dto;
     }
 
     private void validateInquiryDto(InquiryDto inquiryDto) {
@@ -52,7 +70,6 @@ public class InquiryService {
     }
 
     public List<Inquiry> getAllInquiries() {
-        // Get the currently authenticated user's authorities
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 

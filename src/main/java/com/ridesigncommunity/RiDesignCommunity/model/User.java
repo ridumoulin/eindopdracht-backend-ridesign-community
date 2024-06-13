@@ -1,5 +1,6 @@
 package com.ridesigncommunity.RiDesignCommunity.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +10,8 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
 
+    @Id
     @Column(name = "email", nullable = false)
     private String email;
 
@@ -25,7 +24,7 @@ public class User {
     @Column(name = "last_name")
     private String lastname;
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", unique = true)
     private String username;
 
     @Column(name = "is_ri_designer")
@@ -34,22 +33,41 @@ public class User {
     @OneToOne(mappedBy = "user")
     private ImageData imageData;
 
+    @OneToMany(mappedBy = "user")
+    private List<Product> products;
+
     @ElementCollection
-    @CollectionTable(name = "user_favorites", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "user_favorites", joinColumns = @JoinColumn(name = "email"))
     @Column(name = "product_id")
     private List<Long> favorites = new ArrayList<>();
 
     @OneToMany(
-            mappedBy = "user",
+            mappedBy = "email",
             targetEntity = Authority.class,
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
 
-    public Long getUserId() { return userId; }
 
-    public void setUserId(Long userId) { this.userId = userId;}
+    public User(String username) {
+
+        this.username = username;
+
+    }
+
+    public User(String email, String password, String firstname, String lastname, String username, boolean isRiDesigner, Set<Authority> authorities) {
+        this.email = email;
+        this.password = password;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.username = username;
+        this.isRiDesigner = isRiDesigner;
+        this.authorities = authorities;
+    }
+
+    public User() {
+    }
 
     public String getFirstname() {
         return firstname;
@@ -93,6 +111,14 @@ public class User {
         return isRiDesigner;
     }
 
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
     public void setRiDesigner(boolean isRiDesigner) {
         this.isRiDesigner = isRiDesigner;
     }
@@ -116,4 +142,10 @@ public class User {
     public List<Long> getFavorites() {
         return favorites;
     }
+
+    public void addAuthority(Authority authority) {
+        this.authorities.add(authority);
+    }
 }
+
+

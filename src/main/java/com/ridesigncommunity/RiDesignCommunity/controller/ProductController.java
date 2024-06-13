@@ -3,12 +3,18 @@ package com.ridesigncommunity.RiDesignCommunity.controller;
 import com.ridesigncommunity.RiDesignCommunity.dto.ProductDto;
 import com.ridesigncommunity.RiDesignCommunity.model.Product;
 import com.ridesigncommunity.RiDesignCommunity.service.ProductService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import javax.persistence.EntityNotFoundException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.Transient;
+
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,14 +29,19 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody ProductDto productDto) {
-        Product createdProduct = productService.createProduct(productDto);
-        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
+        ProductDto createdProduct = productService.createProduct(productDto);
+
+        URI uri = URI.create(
+                ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/" + productDto.getProductId()).toUriString());
+       return ResponseEntity.created(uri).body(createdProduct);
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts(@RequestParam(required = false) String category) {
-        List<Product> products;
+    public ResponseEntity<List<ProductDto>> getAllProducts(@RequestParam(required = false) String category) {
+        List<ProductDto> products;
         if (category != null) {
             products = productService.getProductsByCategory(category);
         } else {
@@ -40,8 +51,8 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long productId) {
-        Product product = productService.getProductById(productId);
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long productId) {
+        ProductDto product = productService.getProductById(productId);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
@@ -56,16 +67,20 @@ public class ProductController {
         }
     }
 
+
     @GetMapping("/search")
-    public ResponseEntity<List<Product>> searchProducts(@RequestParam(required = false) String category,
-                                                        @RequestParam(required = false) String productTitle) {
-        List<Product> products = productService.searchProducts(category, productTitle);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam(required = false) String category) {
+        if (category != null && !category.isEmpty()) {
+            List<ProductDto> products = productService.getProductsByCategory(category);
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } else {
+            return ResponseEntity.ok().body(new ArrayList<>());
+        }
     }
 
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<List<Product>> getProductsByUserId(@PathVariable Long userId) {
-        List<Product> products = productService.getProductsByUserId(userId);
+    @GetMapping("/users/{username}")
+    public ResponseEntity<List<Product>> getProductsByUserId(@PathVariable String username) {
+        List<Product> products = productService.getProductsByUsername(username);
         return ResponseEntity.ok().body(products);
     }
 }

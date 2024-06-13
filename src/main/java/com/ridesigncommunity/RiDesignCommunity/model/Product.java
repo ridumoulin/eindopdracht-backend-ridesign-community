@@ -27,7 +27,7 @@ public class Product {
     @Column(name = "materials")
     private String materials;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 10000)
     private String description;
 
     @Column(name = "price")
@@ -35,12 +35,29 @@ public class Product {
 
     @ElementCollection
     @CollectionTable(name = "delivery_options", joinColumns = @JoinColumn(name = "product_id"))
-    @Column(name = "delivery_option")
+    @Column(name = "delivery_options")
     private List<String> deliveryOptions = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "email")
     private User user;
+
+    public Product(Long productId, String productTitle, List<ImageData> images, String category, String measurements, String materials, String description, double price, List<String> deliveryOptions, User user) {
+        this.productId = productId;
+        this.productTitle = productTitle;
+        this.images = images;
+        this.category = category;
+        this.measurements = measurements;
+        this.materials = materials;
+        this.description = description;
+        this.price = price;
+        this.deliveryOptions = deliveryOptions;
+        this.user = user;
+    }
+
+    public Product() {
+
+    }
 
     public Long getProductId() {
         return productId;
@@ -121,4 +138,7 @@ public class Product {
     public void setUser(User user) {
         this.user = user;
     }
+
+
 }
+
