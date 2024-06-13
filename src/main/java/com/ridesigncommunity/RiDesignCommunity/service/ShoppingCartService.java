@@ -53,9 +53,13 @@ public class ShoppingCartService {
             User user = userOptional.get();
             Product product = productOptional.get();
 
-            ShoppingCart shoppingCart = new ShoppingCart();
-            shoppingCart.setUser(user);
-            shoppingCart.getProducts().add(product);
+            ShoppingCart shoppingCart = shoppingCartRepository.findByUser_Email(email)
+                    .orElseGet(() -> {
+                        ShoppingCart newCart = new ShoppingCart(user);
+                        return shoppingCartRepository.save(newCart);
+                    });
+
+            shoppingCart.addProduct(product);
 
             ShoppingCart savedCart = shoppingCartRepository.save(shoppingCart);
             return mapToDto(savedCart);

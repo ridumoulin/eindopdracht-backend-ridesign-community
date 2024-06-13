@@ -25,6 +25,13 @@ public class ShoppingCart {
     )
     private List<Product> products = new ArrayList<>();
 
+    public ShoppingCart() {
+    }
+
+    public ShoppingCart(User user) {
+        this.user = user;
+    }
+
     public Long getCartId() {
         return cartId;
     }
@@ -45,4 +52,7 @@ public class ShoppingCart {
         return products;
     }
 
+    public void addProduct(Product product) {
+        this.products.add(product);
+    }
 }
